@@ -25,6 +25,22 @@ namespace GrassyKnight
                 // cast is added for clarity but is unnecessary.
                 (Vector2)gameObject.transform.position);
         }
+
+        public override string ToString() {
+            return $"{SceneName}/{ObjectName} ({Position.x}, {Position.y})";
+        }
+
+        private (string, string, Vector2) ToTuple() {
+            return (SceneName, ObjectName, Position);
+        }
+
+        public override int GetHashCode() {
+            return ToTuple().GetHashCode();
+        }
+
+        public override bool Equals(object other) {
+            return ToTuple() == ((GrassKey)other).ToTuple();
+        }
     }
 
     [Serializable()]

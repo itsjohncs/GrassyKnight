@@ -14,14 +14,18 @@ namespace GrassyKnight
         // nearest uncut grass?")
         GrassDB GrassStates = new GrassDB();
 
-        // Knows if an object is grass. Very wise. Uwu.
+        // Knows if an object is grass. Very wise. Uwu. Which knower we use
+        // depends on configuration
         GrassKnower SetOfAllGrass = null;
 
+        // The status bar that shows the player the number of grass cut
         StatusBar Status = null;
 
-        Behaviour CoroutineHelper;
+        // An object that gives us access to unity's coroutine scheduler
+        Behaviour CoroutineHelper = null;
 
-        GameObject Compass;
+        // The little boxy compass that follows the knight
+        GameObject Compass = null;
 
         public override string GetVersion() => "0.1.0";
 
@@ -32,11 +36,12 @@ namespace GrassyKnight
         public override void Initialize() {
             base.Initialize();
 
-            // All things that make game objects... not sure if these are
-            // safe to just go ahead and make during contruction...
+            // We wait to create these until now because they all create game
+            // objects. I found that game objects created in field initializers
+            // are unreliable (and I assume the same is true for in the
+            // constructor).
             Status = new StatusBar();
             CoroutineHelper = Behaviour.CreateBehaviour();
-
             Compass = CompassBehaviour.CreateCompassGameObject(GrassStates);
 
             // TODO: Check the global settings to know which grass knower to

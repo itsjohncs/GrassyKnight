@@ -82,9 +82,10 @@ namespace GrassyKnight
                 sceneName = GameManager.instance.sceneName;
             }
             
-            if (sceneName != null &&
-                    sceneName != "" &&
-                    !sceneName.ToLower().Contains("menu")) {
+            bool shouldStatusBeVisible = (
+                UIManager.instance.uiState == GlobalEnums.UIState.PLAYING ||
+                UIManager.instance.uiState == GlobalEnums.UIState.PAUSED);
+            if (sceneName != null && shouldStatusBeVisible) {
                 Status.Update(
                     GrassStates.GetStatsForScene(sceneName),
                     GrassStates.GetGlobalStats());

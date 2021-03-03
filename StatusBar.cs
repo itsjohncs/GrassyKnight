@@ -62,15 +62,17 @@ namespace GrassyKnight
         }
 
         public void Update(GrassStats scene, GrassStats global) {
-            string result = "";
+            string statusText = "";
 
             if (scene == null) {
-                result += $"(not in a room) ";
+                statusText += $"(not in a room) ";
             } else {
-                result += $"in room: {PrettyStats(scene)} ";
+                statusText += $"in room: {PrettyStats(scene)} ";
             }
 
-            result += $"-- globally: {PrettyStats(global)}";
+            statusText += $"-- globally: {PrettyStats(global)}";
+
+            _textOnCanvas.GetComponent<Text>().text = statusText;
         }
     }
 }

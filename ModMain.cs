@@ -34,7 +34,6 @@ namespace GrassyKnight
             GrassStates.OnStatsChanged += (_, _1) => UpdateStatus();
             UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
                 (scene, _) => UpdateStatus(scene.name);
-            Status.Visible = true; // Temporary, wanna tie this into main menu visibility
         }
 
         private void UpdateStatus(string sceneName = null) {
@@ -42,14 +41,16 @@ namespace GrassyKnight
                 sceneName = GameManager.instance.sceneName;
             }
             
-            GrassStats sceneStats = null;
-            if (sceneName != null && sceneName != "") {
-                sceneStats = GrassStates.GetStatsForScene(sceneName);
+            if (sceneName != null &&
+                    sceneName != "" &&
+                    !sceneName.ToLower().Contains("menu")) {
+                Status.Update(
+                    GrassStates.GetStatsForScene(sceneName),
+                    GrassStates.GetGlobalStats());
+                Status.Visible = true;
+            } else {
+                Status.Visible = false;
             }
-
-            GrassStats globalStats = GrassStates.GetGlobalStats();
-            
-            Status.Update(sceneStats, globalStats);
         }
 
 

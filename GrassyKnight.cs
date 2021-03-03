@@ -45,8 +45,12 @@ namespace GrassyKnight
         // The status bar that shows the player the number of grass cut
         StatusBar Status = null;
 
-        // An object that gives us access to unity's coroutine scheduler
-        Behaviour CoroutineHelper = null;
+        // Usually Unity code is contained in MonoBehaviour classes, so Unity
+        // has lots of very useful functionality in them (ex: access to the
+        // coroutine scheduler). This is forever-living MonoBehaviour object we
+        // use to give us that funcionality despite our non-MonoBheaviour
+        // status.
+        Behaviour UtilityBehaviour = null;
 
         public override string GetVersion() => "0.1.0";
 
@@ -62,7 +66,7 @@ namespace GrassyKnight
             // are unreliable (and I assume the same is true for in the
             // constructor).
             Status = new StatusBar();
-            CoroutineHelper = Behaviour.CreateBehaviour();
+            UtilityBehaviour = Behaviour.CreateBehaviour();
 
             // TODO: Check the global settings to know which grass knower to
             // use. Bool is here just to help me prepare for future.
@@ -70,7 +74,7 @@ namespace GrassyKnight
             if (useHeuristic) {
                 SetOfAllGrass = new HeuristicGrassKnower();
                 UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
-                    (_, _1) => CoroutineHelper.StartCoroutine(
+                    (_, _1) => UtilityBehaviour.StartCoroutine(
                         WaitThenFindGrass());
             }
 
@@ -81,17 +85,32 @@ namespace GrassyKnight
             // swung at. This is the detector of shameful grass.
             Modding.ModHooks.Instance.SlashHitHook += HandleSlashHit;
 
-            // Ensure the status text stays updated (UpdateStatus also takes
-            // care of visibility on the main menu vs in-game)
+            // Update the stats in the status bar whenever we change scenes or
+            // if they change.
             GrassStates.OnStatsChanged += (_, _1) => UpdateStatus();
             UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
                 (scene, _) => UpdateStatus(scene.name);
 
-            // Make sure our hero has their friendly grass compass
-            Modding.ModHooks.Instance.HeroUpdateHook += HandleHeroUpdate;
+            // Hides/shows the status bar depending on UI state
+            UtilityBehaviour.OnUpdate += HandleCheckStatusBarVisibility;
+
+            // Make sure the hero always has the grassy compass component
+            // attached. We could probably hook the hero object's creation to
+            // be more efficient, but it's a cheap operation so imma not worry
+            // about it.
+            Modding.ModHooks.Instance.HeroUpdateHook +=
+                HandleCheckGrassyCompass;
+
         }
 
-        private void HandleHeroUpdate() {
+        private void HandleCheckStatusBarVisibility(object _, EventArgs _1) {
+            Status.Visible =
+                UIManager.instance.uiState == GlobalEnums.UIState.PLAYING ||
+                UIManager.instance.uiState == GlobalEnums.UIState.PAUSED;
+        }
+
+        private void HandleCheckGrassyCompass() {
+            // Ensure the hero has their grassy compass friend
             GameObject hero = GameManager.instance?.hero_ctrl?.gameObject;
             if (hero != null) {
                 GrassyCompass compass = hero.GetComponent<GrassyCompass>();
@@ -130,16 +149,11 @@ namespace GrassyKnight
                     sceneName = GameManager.instance?.sceneName;
                 }
                 
-                bool shouldStatusBeVisible = (
-                    UIManager.instance.uiState == GlobalEnums.UIState.PLAYING ||
-                    UIManager.instance.uiState == GlobalEnums.UIState.PAUSED);
-                if (sceneName != null && shouldStatusBeVisible) {
+                if (sceneName != null) {
                     Status.Update(
                         GrassStates.GetStatsForScene(sceneName),
                         GrassStates.GetGlobalStats());
                     Status.Visible = true;
-                } else {
-                    Status.Visible = false;
                 }
             } catch (System.Exception e) {
                 LogException("Error in UpdateStatus", e);

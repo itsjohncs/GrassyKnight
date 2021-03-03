@@ -125,20 +125,24 @@ namespace GrassyKnight
         }
 
         private void UpdateStatus(string sceneName = null) {
-            if (sceneName == null) {
-                sceneName = GameManager.instance?.sceneName;
-            }
-            
-            bool shouldStatusBeVisible = (
-                UIManager.instance.uiState == GlobalEnums.UIState.PLAYING ||
-                UIManager.instance.uiState == GlobalEnums.UIState.PAUSED);
-            if (sceneName != null && shouldStatusBeVisible) {
-                Status.Update(
-                    GrassStates.GetStatsForScene(sceneName),
-                    GrassStates.GetGlobalStats());
-                Status.Visible = true;
-            } else {
-                Status.Visible = false;
+            try {
+                if (sceneName == null) {
+                    sceneName = GameManager.instance?.sceneName;
+                }
+                
+                bool shouldStatusBeVisible = (
+                    UIManager.instance.uiState == GlobalEnums.UIState.PLAYING ||
+                    UIManager.instance.uiState == GlobalEnums.UIState.PAUSED);
+                if (sceneName != null && shouldStatusBeVisible) {
+                    Status.Update(
+                        GrassStates.GetStatsForScene(sceneName),
+                        GrassStates.GetGlobalStats());
+                    Status.Visible = true;
+                } else {
+                    Status.Visible = false;
+                }
+            } catch (System.Exception e) {
+                LogException("Error in UpdateStatus", e);
             }
         }
 
@@ -179,7 +183,7 @@ namespace GrassyKnight
                     }
                 }
             } catch (System.Exception e) {
-                LogException("Error in OnShouldCutGrass", e);
+                LogException("Error in HandleShouldCut", e);
             }
 
             return shouldCut;
@@ -194,7 +198,7 @@ namespace GrassyKnight
                         GrassState.ShouldBeCut);
                 }
             } catch(System.Exception e) {
-                LogException("Error in OnSlashHit", e);
+                LogException("Error in HandleSlashHit", e);
             }
         }
     }

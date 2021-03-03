@@ -26,7 +26,7 @@ namespace GrassyKnight
                 _Start();
             } catch (System.Exception e) {
                 GrassyKnight.Instance.LogException(
-                    "Error in GrassyCompass.Update()", e);
+                    "Error in GrassyCompass.Start()", e);
             }
         }
 

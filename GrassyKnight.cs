@@ -5,7 +5,12 @@ using UnityEngine.UI;
 
 namespace GrassyKnight
 {
-    public class ModMain : Modding.Mod {
+    public class GrassyKnight : Modding.Mod {
+        // In a previous version we accessed ModSettings.BoolValues directly,
+        // but it looks like the latest code in the Modding.API repo no longer
+        // has BoolValues as a member at all. This way of using ModSettings is
+        // more in line with other mod authors do so we should be somewhat
+        // future-proof now.
         private class MySaveData : Modding.ModSettings {
             public string serializedGrassDB;
         }
@@ -27,7 +32,7 @@ namespace GrassyKnight
 
         // Will be set to the exactly one ModMain in existance... Trusting
         // Modding.Mod to ensure that ModMain is only ever instantiated once...
-        public static ModMain Instance = null;
+        public static GrassyKnight Instance = null;
 
         // Stores which grass is cut and allows queries (like "where's the
         // nearest uncut grass?")
@@ -48,8 +53,8 @@ namespace GrassyKnight
 
         public override string GetVersion() => "0.1.0";
 
-        public ModMain() : base("Grassy Knight") {
-            ModMain.Instance = this;
+        public GrassyKnight() : base("Grassy Knight") {
+            GrassyKnight.Instance = this;
         }
 
         public override void Initialize() {

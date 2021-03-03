@@ -25,7 +25,7 @@ namespace GrassyKnight
             try {
                 _Update();
             } catch (System.Exception e) {
-                ModMain.Instance.LogException(
+                GrassyKnight.Instance.LogException(
                     "Error in CompassBehaviour.Update()", e);
             }
         }

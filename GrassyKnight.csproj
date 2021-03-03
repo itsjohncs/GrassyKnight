@@ -77,8 +77,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModMain.cs" />
+    <Compile Include="GrassyKnight.cs" />
     <Compile Include="GrassDB.cs" />
+    <Compile Include="GrassKey.cs" />
+    <Compile Include="GrassState.cs" />
+    <Compile Include="GrassStats.cs" />
     <Compile Include="GrassKnower.cs" />
     <Compile Include="StatusBar.cs" />
     <Compile Include="Behaviour.cs" />

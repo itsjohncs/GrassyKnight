@@ -48,9 +48,6 @@ namespace GrassyKnight
         // An object that gives us access to unity's coroutine scheduler
         Behaviour CoroutineHelper = null;
 
-        // The little boxy compass that follows the knight
-        GameObject Compass = null;
-
         public override string GetVersion() => "0.1.0";
 
         public GrassyKnight() : base("Grassy Knight") {
@@ -66,7 +63,6 @@ namespace GrassyKnight
             // constructor).
             Status = new StatusBar();
             CoroutineHelper = Behaviour.CreateBehaviour();
-            Compass = CompassBehaviour.CreateCompassGameObject(GrassStates);
 
             // TODO: Check the global settings to know which grass knower to
             // use. Bool is here just to help me prepare for future.
@@ -90,6 +86,19 @@ namespace GrassyKnight
             GrassStates.OnStatsChanged += (_, _1) => UpdateStatus();
             UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
                 (scene, _) => UpdateStatus(scene.name);
+
+            // Make sure our hero has their friendly grass compass
+            Modding.ModHooks.Instance.HeroUpdateHook += HandleHeroUpdate;
+        }
+
+        private void HandleHeroUpdate() {
+            GameObject hero = GameManager.instance?.hero_ctrl?.gameObject;
+            if (hero != null) {
+                GrassyCompass compass = hero.GetComponent<GrassyCompass>();
+                if (compass == null) {
+                    hero.AddComponent<GrassyCompass>().AllGrass = GrassStates;
+                }
+            }
         }
 
         // Only used if we're using the HeuristicGrassKnower, meant to be

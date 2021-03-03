@@ -85,7 +85,7 @@
     <Compile Include="GrassKnower.cs" />
     <Compile Include="StatusBar.cs" />
     <Compile Include="Behaviour.cs" />
-    <Compile Include="CompassBehaviour.cs" />
+    <Compile Include="GrassyCompass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -29,7 +29,12 @@ namespace GrassyKnight
             // use.
             SetOfAllGrass = new HeuristicGrassKnower();
 
+            // Triggered when real grass is being cut for real
             On.GrassCut.ShouldCut += HandleShouldCut;
+
+            // Backup we use to make sure we notice uncuttable grass getting
+            // swung at. This is the detector of shameful grass.
+            Modding.ModHooks.Instance.SlashHitHook += HandleSlashHit;
 
             // Ensure the status text stays updated (UpdateStatus also takes
             // care of visibility on the main menu vs in-game)
@@ -96,6 +101,19 @@ namespace GrassyKnight
             }
 
             return shouldCut;
+        }
+
+        private void HandleSlashHit(Collider2D otherCollider, GameObject _) {
+            try {
+                GameObject maybeGrass = otherCollider.gameObject;
+                if (SetOfAllGrass.IsGrass(maybeGrass)) {
+                    GrassStates.TrySet(
+                        GrassKey.FromGameObject(maybeGrass),
+                        GrassState.ShouldBeCut);
+                }
+            } catch(System.Exception e) {
+                LogException("Error in OnSlashHit", e);
+            }
         }
     }
 }

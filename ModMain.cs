@@ -31,6 +31,8 @@ namespace GrassyKnight
 
             On.GrassCut.ShouldCut += HandleShouldCut;
 
+            // Ensure the status text stays updated (UpdateStatus also takes
+            // care of visibility on the main menu vs in-game)
             GrassStates.OnStatsChanged += (_, _1) => UpdateStatus();
             UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
                 (scene, _) => UpdateStatus(scene.name);

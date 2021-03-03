@@ -6,6 +6,25 @@ using UnityEngine.UI;
 namespace GrassyKnight
 {
     public class ModMain : Modding.Mod {
+        private class MySaveData : Modding.ModSettings {
+            public string serializedGrassDB;
+        }
+
+        public override Modding.ModSettings SaveSettings
+        {
+            get {
+                return new MySaveData {
+                    serializedGrassDB = GrassStates.Serialize(),
+                };
+            }
+
+            set {
+                GrassStates.Clear();
+                GrassStates.AddSerializedData(
+                    ((MySaveData)value).serializedGrassDB);
+            }
+        }
+
         // Will be set to the exactly one ModMain in existance... Trusting
         // Modding.Mod to ensure that ModMain is only ever instantiated once...
         public static ModMain Instance = null;

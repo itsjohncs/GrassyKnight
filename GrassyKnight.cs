@@ -105,9 +105,10 @@ namespace GrassyKnight
 
         private void HandleCheckStatusBarVisibility(object _, EventArgs _1) {
             try {
+                GlobalEnums.UIState? state = UIManager.instance?.uiState;
                 Status.Visible =
-                    UIManager.instance.uiState == GlobalEnums.UIState.PLAYING ||
-                    UIManager.instance.uiState == GlobalEnums.UIState.PAUSED;
+                    state == GlobalEnums.UIState.PLAYING ||
+                    state == GlobalEnums.UIState.PAUSED;
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckStatusBarVisibility", e);
             }

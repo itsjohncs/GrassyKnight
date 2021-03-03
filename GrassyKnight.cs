@@ -104,19 +104,27 @@ namespace GrassyKnight
         }
 
         private void HandleCheckStatusBarVisibility(object _, EventArgs _1) {
-            Status.Visible =
-                UIManager.instance.uiState == GlobalEnums.UIState.PLAYING ||
-                UIManager.instance.uiState == GlobalEnums.UIState.PAUSED;
+            try {
+                Status.Visible =
+                    UIManager.instance.uiState == GlobalEnums.UIState.PLAYING ||
+                    UIManager.instance.uiState == GlobalEnums.UIState.PAUSED;
+            } catch (System.Exception e) {
+                LogException("Error in HandleCheckStatusBarVisibility", e);
+            }
         }
 
         private void HandleCheckGrassyCompass() {
-            // Ensure the hero has their grassy compass friend
-            GameObject hero = GameManager.instance?.hero_ctrl?.gameObject;
-            if (hero != null) {
-                GrassyCompass compass = hero.GetComponent<GrassyCompass>();
-                if (compass == null) {
-                    hero.AddComponent<GrassyCompass>().AllGrass = GrassStates;
+            try {
+                // Ensure the hero has their grassy compass friend
+                GameObject hero = GameManager.instance?.hero_ctrl?.gameObject;
+                if (hero != null) {
+                    GrassyCompass compass = hero.GetComponent<GrassyCompass>();
+                    if (compass == null) {
+                        hero.AddComponent<GrassyCompass>().AllGrass = GrassStates;
+                    }
                 }
+            } catch (System.Exception e) {
+                LogException("Error in HandleCheckGrassyCompass", e);
             }
         }
 

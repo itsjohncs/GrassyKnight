@@ -108,14 +108,13 @@ namespace GrassyKnight
             }
 
             if (Target != null) {
+                // Position of target relative to game object. This'll account
+                // for rotation, scale, and world position of game object
+                // properly
+                Vector3 targetLocalPosition =
+                    gameObject.transform.InverseTransformPoint(Target.Value);
                 _compassGameObject.transform.localPosition =
-                    Vector3.ClampMagnitude(
-                        // Target and transform.position are in world space
-                        // scale. Bring it into hero's local scale because
-                        // that's what we'll be affected by.
-                        gameObject.transform.InverseTransformVector(
-                            (Vector3)Target.Value - gameObject.transform.position),
-                        Radius);
+                    Vector3.ClampMagnitude(targetLocalPosition, Radius);
             }
 
             // Hide/show the compass appropriately

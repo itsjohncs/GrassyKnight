@@ -104,6 +104,9 @@ namespace GrassyKnight
         }
 
         public bool TrySet(GrassKey k, GrassState newState) {
+            string[] serialized = k.Serialize();
+            GrassKey same = GrassKey.Deserialize(serialized);
+
             TryAddScene(k.SceneName);
 
             GrassState? oldState = null;
@@ -124,13 +127,13 @@ namespace GrassyKnight
             }
         }
 
-        public GrassKey GetNearestUncutGrass(Vector2 origin, string sceneName) {
+        public GrassKey? GetNearestUncutGrass(Vector2 origin, string sceneName) {
             Dictionary<GrassKey, GrassState> grassStatesForScene;
             if (!GrassStates.TryGetValue(sceneName, out grassStatesForScene)) {
                 return null;
             }
 
-            GrassKey closest = null;
+            GrassKey? closest = null;
             float closestDistance = float.PositiveInfinity;
             foreach (KeyValuePair<GrassKey, GrassState> kv in grassStatesForScene) {
                 if (kv.Value != GrassState.Uncut) {

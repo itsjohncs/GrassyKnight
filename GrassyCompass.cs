@@ -98,7 +98,7 @@ namespace GrassyKnight
                 // scene name.
                 string sceneName = GameManager.instance?.sceneName;
                 if (sceneName != null) {
-                    GrassKey nearestGrass = AllGrass.GetNearestUncutGrass(
+                    GrassKey? nearestGrass = AllGrass.GetNearestUncutGrass(
                         gameObject.transform.position,
                         sceneName);
                     Target = nearestGrass?.Position;

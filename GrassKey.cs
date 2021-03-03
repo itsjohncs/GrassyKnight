@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GrassyKnight
 {
-	class GrassKey {
+    readonly struct GrassKey {
         public readonly string SceneName;
         public readonly string ObjectName;
         public readonly Vector2 Position;
@@ -25,10 +25,6 @@ namespace GrassyKnight
                 (Vector2)gameObject.transform.position);
         }
 
-        public override string ToString() {
-            return $"{SceneName}/{ObjectName} ({Position.x}, {Position.y})";
-        }
-
         private (string, string, Vector2) ToTuple() {
             return (SceneName, ObjectName, Position);
         }
@@ -38,7 +34,25 @@ namespace GrassyKnight
         }
 
         public override bool Equals(object other) {
-            return ToTuple() == ((GrassKey)other).ToTuple();
+            if (other is GrassKey otherKey) {
+                return ToTuple().Equals(otherKey.ToTuple());
+            } else {
+                return false;
+            }
+        }
+
+        public static bool operator ==(GrassKey a, GrassKey b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(GrassKey a, GrassKey b)
+        {
+            return !a.Equals(b);
+        }
+
+        public override string ToString() {
+            return $"{SceneName}/{ObjectName} ({Position.x}, {Position.y})";
         }
 
         // The size of the arrays Serialize returns and Deserialize expects
@@ -57,18 +71,39 @@ namespace GrassyKnight
         // Decodes a base 64 string into what should be valid UTF-16 which we
         // then convert to a string (which should be a no-op for the same
         // reason as above).
-        private static string FromBase64(string str) {
+        private static string StringFromBase64(string str) {
             // Read "Unicode" as UTF-16
             return Encoding.Unicode.GetString(
                 Convert.FromBase64String(str));
+        }
+
+        private static string ToBase64(float num) {
+            byte[] bytes = BitConverter.GetBytes(num);
+            if (BitConverter.IsLittleEndian) {
+                // Ensure the bytes are in big-endian order
+                Array.Reverse(bytes);
+            }
+
+            return Convert.ToBase64String(bytes);
+        }
+
+        private static float FloatFromBase64(string str) {
+            byte[] bytes = Convert.FromBase64String(str);
+            if (BitConverter.IsLittleEndian) {
+                // The serialized bytes are always big endian, so we gotta flip
+                // them back if we're on a little endian machine
+                Array.Reverse(bytes);
+            }
+
+            return BitConverter.ToSingle(bytes, 0);
         }
 
         public string[] Serialize() {
             return new string[] {
                 ToBase64(SceneName),
                 ToBase64(ObjectName),
-                Position.x.ToString(),
-                Position.y.ToString(),
+                ToBase64(Position.x),
+                ToBase64(Position.y),
             };
         }
 
@@ -81,11 +116,11 @@ namespace GrassyKnight
             }
 
             return new GrassKey(
-                FromBase64(serialized[0]),
-                FromBase64(serialized[1]),
+                StringFromBase64(serialized[0]),
+                StringFromBase64(serialized[1]),
                 new Vector2(
-                    float.Parse(serialized[2]),
-                    float.Parse(serialized[3])));
+                    FloatFromBase64(serialized[2]),
+                    FloatFromBase64(serialized[3])));
         }
     }
 }

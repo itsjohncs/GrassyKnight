@@ -6,6 +6,10 @@ using UnityEngine.UI;
 namespace GrassyKnight
 {
     public class ModMain : Modding.Mod {
+        // Will be set to the exactly one ModMain in existance... Trusting
+        // Modding.Mod to ensure that ModMain is only ever instantiated once...
+        public static ModMain Instance = null;
+
         // Stores which grass is cut and allows queries (like "where's the
         // nearest uncut grass?")
         GrassDB GrassStates = new GrassDB();
@@ -17,18 +21,23 @@ namespace GrassyKnight
 
         Behaviour CoroutineHelper;
 
+        GameObject Compass;
+
         public override string GetVersion() => "0.1.0";
 
         public ModMain() : base("Grassy Knight") {
-            //
+            ModMain.Instance = this;
         }
 
         public override void Initialize() {
             base.Initialize();
 
+            // All things that make game objects... not sure if these are
+            // safe to just go ahead and make during contruction...
             Status = new StatusBar();
-
             CoroutineHelper = Behaviour.CreateBehaviour();
+
+            Compass = CompassBehaviour.CreateCompassGameObject(GrassStates);
 
             // TODO: Check the global settings to know which grass knower to
             // use. Bool is here just to help me prepare for future.
@@ -79,7 +88,7 @@ namespace GrassyKnight
 
         private void UpdateStatus(string sceneName = null) {
             if (sceneName == null) {
-                sceneName = GameManager.instance.sceneName;
+                sceneName = GameManager.instance?.sceneName;
             }
             
             bool shouldStatusBeVisible = (
@@ -96,7 +105,7 @@ namespace GrassyKnight
         }
 
 
-        private void LogException(string heading, System.Exception error) {
+        public void LogException(string heading, System.Exception error) {
             const string indent = "... ";
             string indentedError =
                 indent + error.ToString().Replace("\n", "\n" + indent);

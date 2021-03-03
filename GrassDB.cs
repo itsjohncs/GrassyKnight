@@ -169,7 +169,7 @@ namespace GrassyKnight
             if (SceneStats.TryGetValue(sceneName, out GrassStats stats)) {
                 return stats;
             } else {
-                return null;
+                return new GrassStats();
             }
         }
 

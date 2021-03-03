@@ -15,6 +15,8 @@ namespace GrassyKnight
 
         StatusBar Status = null;
 
+        Behaviour CoroutineHelper;
+
         public override string GetVersion() => "0.1.0";
 
         public ModMain() : base("Grassy Knight") {
@@ -26,13 +28,15 @@ namespace GrassyKnight
 
             Status = new StatusBar();
 
+            CoroutineHelper = Behaviour.CreateBehaviour();
+
             // TODO: Check the global settings to know which grass knower to
             // use. Bool is here just to help me prepare for future.
             bool useHeuristic = true;
             if (useHeuristic) {
                 SetOfAllGrass = new HeuristicGrassKnower();
                 UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
-                    (_, _1) => ModCommon.ContractorManager.Instance.StartCoroutine(
+                    (_, _1) => CoroutineHelper.StartCoroutine(
                         WaitThenFindGrass());
             }
 

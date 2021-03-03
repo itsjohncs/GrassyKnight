@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,9 +11,9 @@ namespace GrassyKnight
         GrassDB GrassStates = new GrassDB();
 
         // Knows if an object is grass. Very wise. Uwu.
-        GrassKnower SetOfAllGrass;
+        GrassKnower SetOfAllGrass = null;
 
-        StatusBar Status;
+        StatusBar Status = null;
 
         public override string GetVersion() => "0.1.0";
 
@@ -26,8 +27,14 @@ namespace GrassyKnight
             Status = new StatusBar();
 
             // TODO: Check the global settings to know which grass knower to
-            // use.
-            SetOfAllGrass = new HeuristicGrassKnower();
+            // use. Bool is here just to help me prepare for future.
+            bool useHeuristic = true;
+            if (useHeuristic) {
+                SetOfAllGrass = new HeuristicGrassKnower();
+                UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
+                    (_, _1) => ModCommon.ContractorManager.Instance.StartCoroutine(
+                        WaitThenFindGrass());
+            }
 
             // Triggered when real grass is being cut for real
             On.GrassCut.ShouldCut += HandleShouldCut;
@@ -41,6 +48,29 @@ namespace GrassyKnight
             GrassStates.OnStatsChanged += (_, _1) => UpdateStatus();
             UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
                 (scene, _) => UpdateStatus(scene.name);
+        }
+
+        // Only used if we're using the HeuristicGrassKnower, meant to be
+        // called when a new scene is entered.
+        private IEnumerator WaitThenFindGrass() {
+            // The docs suggest waiting a frame after scene loads before we
+            // consider the scene fully instantiated. We've got time, so wait
+            // a whole second.
+            yield return new WaitForSeconds(1);
+
+            try {
+                foreach (GameObject maybeGrass in
+                         UnityEngine.Object.FindObjectsOfType<GameObject>())
+                {
+                    if (SetOfAllGrass.IsGrass(maybeGrass)) {
+                        GrassStates.TrySet(
+                            GrassKey.FromGameObject(maybeGrass),
+                            GrassState.Uncut);
+                    }
+                }
+            } catch (System.Exception e) {
+                LogException("Error in WaitThenFindGrass", e);
+            }
         }
 
         private void UpdateStatus(string sceneName = null) {

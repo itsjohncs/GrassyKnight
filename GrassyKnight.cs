@@ -110,6 +110,11 @@ namespace GrassyKnight
             UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
                 (scene, _) => UpdateStatus(scene.name);
 
+            // It's not what it looks like
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
+                (scene, _) => UtilityBehaviour.StartCoroutine(
+                    ProbeGrassForAwhile());
+
             // Hides/shows the status bar depending on UI state
             UtilityBehaviour.OnUpdate += HandleCheckStatusBarVisibility;
 
@@ -145,6 +150,48 @@ namespace GrassyKnight
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckGrassyCompass", e);
+            }
+        }
+
+        private IEnumerator ProbeGrassForAwhile() {
+            yield return new WaitForSeconds(0.5f);
+
+            GrassInterrogator interrogator = new GrassInterrogator();
+
+            while (true) {
+                try {
+                    foreach (GameObject maybeGrass in
+                             UnityEngine.Object.FindObjectsOfType<GameObject>())
+                    {
+                        GameObject hero = GameManager.instance?.hero_ctrl?.gameObject;
+                        if (hero == null) {
+                            continue;
+                        }
+
+                        if (Vector3.Magnitude(maybeGrass.transform.position - hero.transform.position) > 30) {
+                            continue;
+                        }
+
+                        GrassKey k = GrassKey.FromGameObject(maybeGrass);
+                        if (GrassStates.Contains(k) ||
+                                SetOfAllGrass.IsGrass(maybeGrass)) {
+                            interrogator.ProbeSuspectGrass(maybeGrass);
+                        }
+                    }
+
+                    Log("Interrogator result");
+                    foreach (var kv in interrogator.SusGrass) {
+                        var foo = new System.Collections.Generic.List<string>();
+                        foreach (int i in kv.Value) {
+                            foo.Add(i.ToString());
+                        }
+                        Log($"... {kv.Key} -> {string.Join(", ", foo.ToArray())}");
+                    }
+                } catch (System.Exception e) {
+                    LogException("Error in ProbeGrassForAwhile", e);
+                }
+
+                yield return new WaitForSeconds(1);
             }
         }
 
@@ -203,11 +250,17 @@ namespace GrassyKnight
 
         private bool HandleShouldCut(On.GrassCut.orig_ShouldCut orig, Collider2D collision) {
             // Find out whether the original game code thinks this should be
-            // cut. We'll pass this value through no matter what.
+            // cut
             bool shouldCut = orig(collision);
 
             try {
                 if (shouldCut) {
+                    // If this is a probe, we'll tell it that we hit grass
+                    GrassInterrogator.GrassProbe probeComponent =
+                        collision?
+                        .gameObject?
+                        .GetComponent<GrassInterrogator.GrassProbe>();
+
                     // Hackily figure out which grass the game is asking about
                     // by finding ourselves in the list of objects that
                     // collision is colliding with. This might also find other
@@ -220,6 +273,10 @@ namespace GrassyKnight
                         if (GrassStates.Contains(k) ||
                                 SetOfAllGrass.IsGrass(maybeGrass)) {
                             GrassStates.TrySet(k, GrassState.Cut);
+
+                            if (probeComponent != null) {
+                                probeComponent.GrassHit.Add(k);
+                            }
                         }
                     }
                 }

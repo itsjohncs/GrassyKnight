@@ -81,6 +81,7 @@
     <Compile Include="GrassDB.cs" />
     <Compile Include="GrassKey.cs" />
     <Compile Include="GrassState.cs" />
+    <Compile Include="GrassList.cs" />
     <Compile Include="GrassStats.cs" />
     <Compile Include="GrassKnower.cs" />
     <Compile Include="StatusBar.cs" />

@@ -41,6 +41,15 @@ namespace GrassyKnight
         }
     }
 
-    // TODO: when we have a grass list I'll make a class that uses it to detect
-    // whether something is grass
+    class CuratedGrassKnower : GrassKnower {
+        public override bool IsGrass(GameObject gameObject) {
+            GrassKey k = GrassKey.FromGameObject(gameObject);
+            return GrassList.AllGrass.Contains(
+                $"{k.SceneName}/{k.ObjectName} ({k.Position.x}, {k.Position.y})");
+        }
+
+        public int TotalGrass() {
+            return GrassList.AllGrass.Count;
+        }
+    }
 }

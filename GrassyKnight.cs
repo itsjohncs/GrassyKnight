@@ -70,13 +70,21 @@ namespace GrassyKnight
 
             // TODO: Check the global settings to know which grass knower to
             // use. Bool is here just to help me prepare for future.
-            bool useHeuristic = true;
+            bool useHeuristic = false;
             if (useHeuristic) {
                 SetOfAllGrass = new HeuristicGrassKnower();
-                UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
-                    (_, _1) => UtilityBehaviour.StartCoroutine(
-                        WaitThenFindGrass());
+            } else {
+                SetOfAllGrass = new CuratedGrassKnower();
+                Status.GlobalTotalOverride =
+                    ((CuratedGrassKnower)SetOfAllGrass).TotalGrass();
             }
+
+            // Find all the grass in the room. Once CuratedGrassKnower has
+            // a list of actual GrassKeys I'll only have to do this while using
+            // the HeuristicGrassKnower.
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
+                (_, _1) => UtilityBehaviour.StartCoroutine(
+                    WaitThenFindGrass());
 
             // Triggered when real grass is being cut for real
             On.GrassCut.ShouldCut += HandleShouldCut;
@@ -129,22 +137,21 @@ namespace GrassyKnight
             }
         }
 
-        // Only used if we're using the HeuristicGrassKnower, meant to be
-        // called when a new scene is entered.
+        // Meant to be called when a new scene is entered
         private IEnumerator WaitThenFindGrass() {
             // The docs suggest waiting a frame after scene loads before we
             // consider the scene fully instantiated. We've got time, so wait
-            // a whole second.
-            yield return new WaitForSeconds(1);
+            // even longer.
+            yield return new WaitForSeconds(0.5f);
 
             try {
                 foreach (GameObject maybeGrass in
                          UnityEngine.Object.FindObjectsOfType<GameObject>())
                 {
-                    if (SetOfAllGrass.IsGrass(maybeGrass)) {
-                        GrassStates.TrySet(
-                            GrassKey.FromGameObject(maybeGrass),
-                            GrassState.Uncut);
+                    GrassKey k = GrassKey.FromGameObject(maybeGrass);
+                    if (GrassStates.Contains(k) ||
+                            SetOfAllGrass.IsGrass(maybeGrass)) {
+                        GrassStates.TrySet(k, GrassState.Uncut);
                     }
                 }
             } catch (System.Exception e) {
@@ -198,10 +205,10 @@ namespace GrassyKnight
                     for (int i = 0; i < numFound && i < _OnShouldCutColliders.Length; ++i) {
                         GameObject maybeGrass = _OnShouldCutColliders[i].gameObject;
 
-                        if (SetOfAllGrass.IsGrass(maybeGrass)) {
-                            GrassStates.TrySet(
-                                GrassKey.FromGameObject(maybeGrass),
-                                GrassState.Cut);
+                        GrassKey k = GrassKey.FromGameObject(maybeGrass);
+                        if (GrassStates.Contains(k) ||
+                                SetOfAllGrass.IsGrass(maybeGrass)) {
+                            GrassStates.TrySet(k, GrassState.Cut);
                         }
                     }
                 }
@@ -215,10 +222,10 @@ namespace GrassyKnight
         private void HandleSlashHit(Collider2D otherCollider, GameObject _) {
             try {
                 GameObject maybeGrass = otherCollider.gameObject;
-                if (SetOfAllGrass.IsGrass(maybeGrass)) {
-                    GrassStates.TrySet(
-                        GrassKey.FromGameObject(maybeGrass),
-                        GrassState.ShouldBeCut);
+                GrassKey k = GrassKey.FromGameObject(maybeGrass);
+                if (GrassStates.Contains(k) ||
+                        SetOfAllGrass.IsGrass(maybeGrass)) {
+                    GrassStates.TrySet(k, GrassState.ShouldBeCut);
                 }
             } catch(System.Exception e) {
                 LogException("Error in HandleSlashHit", e);

@@ -5,6 +5,10 @@ using UnityEngine.UI;
 namespace GrassyKnight
 {
     class StatusBar {
+        // If non-null, this'll be used as the global total regardless of what
+        // GrassStats values are given.
+        public int? GlobalTotalOverride = null;
+
         private const int _FONT_SIZE = 21;
         private const int _MARGIN_TOP = 10;
 
@@ -52,9 +56,9 @@ namespace GrassyKnight
             textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;
         }
 
-        private string PrettyStats(GrassStats stats) {
+        private string PrettyStats(GrassStats stats, int? totalOverride = null) {
             int struck = stats[GrassState.Cut] + stats[GrassState.ShouldBeCut];
-            string result =  $"{struck}/{stats.Total()}";
+            string result =  $"{struck}/{totalOverride ?? stats.Total()}";
             if (stats[GrassState.ShouldBeCut] > 0) {
                 result += $" ({stats[GrassState.ShouldBeCut]} shameful)";
             }
@@ -70,7 +74,7 @@ namespace GrassyKnight
                 statusText += $"in room: {PrettyStats(scene)} ";
             }
 
-            statusText += $"-- globally: {PrettyStats(global)}";
+            statusText += $"-- globally: {PrettyStats(global, GlobalTotalOverride)}";
 
             _textOnCanvas.GetComponent<Text>().text = statusText;
         }

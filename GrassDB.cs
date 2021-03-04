@@ -129,6 +129,16 @@ namespace GrassyKnight
             }
         }
 
+        public bool Contains(GrassKey k) {
+            if (GrassStates.TryGetValue(
+                    k.SceneName,
+                    out Dictionary<GrassKey, GrassState> sceneStates)) {
+                return sceneStates.ContainsKey(k);
+            } else {
+                return false;
+            }
+        }
+
         public GrassKey? GetNearestUncutGrass(Vector2 origin, string sceneName) {
             Dictionary<GrassKey, GrassState> grassStatesForScene;
             if (!GrassStates.TryGetValue(sceneName, out grassStatesForScene)) {

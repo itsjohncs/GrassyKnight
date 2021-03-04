@@ -101,7 +101,15 @@ namespace GrassyKnight
                     GrassKey? nearestGrass = AllGrass.GetNearestUncutGrass(
                         gameObject.transform.position,
                         sceneName);
-                    Target = nearestGrass?.Position;
+                    Vector2? newTarget = nearestGrass?.Position;
+
+                    // Very handy debug message in all sorts of situations
+                    if (newTarget != Target) {
+                        GrassyKnight.Instance.LogDebug(
+                            $"Nearest uncut grass is now '{nearestGrass}'");
+                    }
+
+                    Target = newTarget;
 
                     _lastSearchTime = Time.time;
                 }

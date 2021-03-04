@@ -120,6 +120,9 @@ namespace GrassyKnight
                 GlobalStats.HandleUpdate(oldState, newState);
                 OnStatsChanged?.Invoke(this, EventArgs.Empty);
 
+                GrassyKnight.Instance.LogDebug(
+                    $"Updated state of '{k}' to {newState} (was {oldState})");
+
                 return true;
             } else {
                 return false;

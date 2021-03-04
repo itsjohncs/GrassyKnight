@@ -30,6 +30,16 @@ namespace GrassyKnight
             }
         }
 
+        private class MyGlobalSettings : Modding.ModSettings {
+            public bool UseHeuristicGrassKnower = false;
+        }
+
+        private MyGlobalSettings Settings = new MyGlobalSettings();
+        public override Modding.ModSettings GlobalSettings {
+            get => Settings;
+            set => Settings = (MyGlobalSettings)value;
+        }
+
         // Will be set to the exactly one ModMain in existance... Trusting
         // Modding.Mod to ensure that ModMain is only ever instantiated once...
         public static GrassyKnight Instance = null;
@@ -68,15 +78,16 @@ namespace GrassyKnight
             Status = new StatusBar();
             UtilityBehaviour = Behaviour.CreateBehaviour();
 
-            // TODO: Check the global settings to know which grass knower to
-            // use. Bool is here just to help me prepare for future.
-            bool useHeuristic = false;
-            if (useHeuristic) {
+            if (Settings.UseHeuristicGrassKnower) {
                 SetOfAllGrass = new HeuristicGrassKnower();
+                Log("Using HeuristicGrassKnower");
             } else {
                 SetOfAllGrass = new CuratedGrassKnower();
-                Status.GlobalTotalOverride =
-                    ((CuratedGrassKnower)SetOfAllGrass).TotalGrass();
+
+                int totalGrass = ((CuratedGrassKnower)SetOfAllGrass).TotalGrass();
+                Status.GlobalTotalOverride = totalGrass;
+
+                Log($"Using CuratedGrassKnower, {totalGrass} known");
             }
 
             // Find all the grass in the room. Once CuratedGrassKnower has

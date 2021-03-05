@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,15 +69,25 @@ namespace GrassyKnight
             GrassyKnight.Instance = this;
         }
 
-        public override void Initialize() {
-            base.Initialize();
+        public override List<(string, string)> GetPreloadNames() {
+            return new List<(string, string)> {
+                GrassInterrogator.ProbePrefabPath,
+            };
+        }
 
+        public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects) {
             // We wait to create these until now because they all create game
             // objects. I found that game objects created in field initializers
             // are unreliable (and I assume the same is true for in the
             // constructor).
             Status = new StatusBar();
             UtilityBehaviour = Behaviour.CreateBehaviour();
+
+            // Give the GrassInterrogator the prefab it requested
+            GrassInterrogator.ReceiveProbePrefab(
+                preloadedObjects
+                    [GrassInterrogator.ProbePrefabPath.Item1]
+                    [GrassInterrogator.ProbePrefabPath.Item2]);
 
             if (Settings.UseHeuristicGrassKnower) {
                 SetOfAllGrass = new HeuristicGrassKnower();
@@ -254,13 +265,12 @@ namespace GrassyKnight
             bool shouldCut = orig(collision);
 
             try {
-                if (shouldCut) {
-                    // If this is a probe, we'll tell it that we hit grass
-                    GrassInterrogator.GrassProbe probeComponent =
-                        collision?
-                        .gameObject?
-                        .GetComponent<GrassInterrogator.GrassProbe>();
-
+                // If this is a probe, we'll tell it that we hit grass
+                GrassInterrogator.GrassProbe probeComponent =
+                    collision?
+                    .gameObject?
+                    .GetComponent<GrassInterrogator.GrassProbe>();
+                if (shouldCut || probeComponent != null) {
                     // Hackily figure out which grass the game is asking about
                     // by finding ourselves in the list of objects that
                     // collision is colliding with. This might also find other
@@ -272,8 +282,14 @@ namespace GrassyKnight
                         GrassKey k = GrassKey.FromGameObject(maybeGrass);
                         if (GrassStates.Contains(k) ||
                                 SetOfAllGrass.IsGrass(maybeGrass)) {
-                            GrassStates.TrySet(k, GrassState.Cut);
+                            // Only mark the grass as cut if the game thinks
+                            // it ought to be cut...
+                            if (shouldCut) {
+                                GrassStates.TrySet(k, GrassState.Cut);
+                            }
 
+                            // ... our probes don't cause grass to be cut
+                            // though, so we'll mark probe hits regardless.
                             if (probeComponent != null) {
                                 probeComponent.GrassHit.Add(k);
                             }
@@ -290,6 +306,13 @@ namespace GrassyKnight
         private void HandleSlashHit(Collider2D otherCollider, GameObject _) {
             try {
                 GameObject maybeGrass = otherCollider.gameObject;
+                Log($"Parent crawl for ${maybeGrass.name}");
+                GameObject cur = maybeGrass.transform.parent?.gameObject;
+                while (cur != null) {
+                    Log($"... {cur.name}");
+
+                    cur = cur.transform.parent?.gameObject;
+                }
                 GrassKey k = GrassKey.FromGameObject(maybeGrass);
                 if (GrassStates.Contains(k) ||
                         SetOfAllGrass.IsGrass(maybeGrass)) {

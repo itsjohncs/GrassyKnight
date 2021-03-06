@@ -12,7 +12,7 @@ namespace GrassyKnight
         // Maximum distance between game object and compass
         public float Radius = 1.5f;
 
-        // Will be used to automatically update Target ever SearchInterval
+        // Will be used to automatically update Target every SearchInterval
         // seconds if non-null.
         public GrassDB AllGrass = null;
         public float SearchInterval = 0.5f;

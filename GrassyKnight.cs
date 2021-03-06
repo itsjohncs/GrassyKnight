@@ -100,6 +100,11 @@ namespace GrassyKnight
             // Triggered when real grass is being cut for real
             On.GrassCut.ShouldCut += HandleShouldCut;
 
+            On.GrassBehaviour.OnTriggerEnter2D += HandleGrassCollisionEnter;
+            On.GrassCut.OnTriggerEnter2D += HandleGrassCollisionEnter;
+            On.TownGrass.OnTriggerEnter2D += HandleGrassCollisionEnter;
+            On.GrassSpriteBehaviour.OnTriggerEnter2D += HandleGrassCollisionEnter;
+
             // Backup we use to make sure we notice uncuttable grass getting
             // swung at. This is the detector of shameful grass.
             Modding.ModHooks.Instance.SlashHitHook += HandleSlashHit;
@@ -120,6 +125,28 @@ namespace GrassyKnight
             Modding.ModHooks.Instance.HeroUpdateHook +=
                 HandleCheckGrassyCompass;
 
+        }
+
+        // We'll hook this into a bunch of Grass components' OnTriggerEnter2D
+        // methods. It's only responsibility is to store the game object that
+        // the component is attached to for a moment in case ShouldCut is
+        // called in the original function.
+        private void HandleGrassCollisionEnter<OrigFunc, Component>(
+            OrigFunc orig,
+            Component self,
+            Collider2D collision)
+        where Component : MonoBehaviour
+        where OrigFunc : MulticastDelegate
+        {
+            var context = new GrassyBox(self.gameObject);
+            try
+            {
+                orig.DynamicInvoke(new object[] { self, collision });
+            }
+            finally
+            {
+                context.Dispose();
+            }
         }
 
         private void HandleCheckStatusBarVisibility(object _, EventArgs _1) {
@@ -187,12 +214,12 @@ namespace GrassyKnight
             }
         }
 
+        private static string IndentString(string str, string indent = "... ") {
+            return indent + str.Replace("\n", "\n" + indent);
+        }
 
         public void LogException(string heading, System.Exception error) {
-            const string indent = "... ";
-            string indentedError =
-                indent + error.ToString().Replace("\n", "\n" + indent);
-            LogError($"{heading}\n{indentedError}");
+            LogError($"{heading}\n{IndentString(error.ToString())}");
         }
 
         // If C# has local statics, this'd be scoped to OnShouldCut. This is
@@ -208,23 +235,30 @@ namespace GrassyKnight
 
             try {
                 if (shouldCut) {
-                    // Hackily figure out which grass the game is asking about
-                    // by finding ourselves in the list of objects that
-                    // collision is colliding with. This might also find other
-                    // grass but that's fine.
-                    int numFound = collision.GetContacts(_OnShouldCutColliders);
-                    for (int i = 0; i < numFound && i < _OnShouldCutColliders.Length; ++i) {
-                        GameObject maybeGrass = _OnShouldCutColliders[i].gameObject;
-
-                        GrassKey k = GrassKey.FromGameObject(maybeGrass);
-                        if (GrassStates.Contains(k) ||
-                                SetOfAllGrass.IsGrass(maybeGrass)) {
-                            GrassStates.TrySet(k, GrassState.Cut);
-                        }
+                    // ShouldCut is a static function so we've hooked every
+                    // function that calls ShouldCut. Our hooks will store the
+                    // GameObject whose component's method is calling ShouldCut
+                    // in this box so that we can grab it out. This could also
+                    // be done by walking the stack upwards IF C# let us
+                    // examine the argument values of stack frames, but C# does
+                    // not give us a good way to do that so here we are.
+                    GameObject grass = GrassyBox.GetValue();
+                    GrassKey k = GrassKey.FromGameObject(grass);
+                    if (GrassStates.Contains(k) ||
+                            SetOfAllGrass.IsGrass(grass)) {
+                        GrassStates.TrySet(k, GrassState.Cut);
                     }
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleShouldCut", e);
+
+                // Exception stack traces seem to terminate once we're out
+                // of this assembly... It doesn't show who called ShouldCut
+                // anyways. And that's exactly the information we want if we're
+                // looking for more functions to hook HandleGrassCollisionEnter
+                // into.
+                LogDebug("More complete stack trace:");
+                LogDebug(IndentString(System.Environment.StackTrace));
             }
 
             return shouldCut;

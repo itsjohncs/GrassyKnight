@@ -32,6 +32,7 @@ namespace GrassyKnight
 
         private class MyGlobalSettings : Modding.ModSettings {
             public bool UseHeuristicGrassKnower = false;
+            public bool AutomaticallyCutGrass = false;
         }
 
         private MyGlobalSettings Settings = new MyGlobalSettings();
@@ -127,6 +128,13 @@ namespace GrassyKnight
             Modding.ModHooks.Instance.HeroUpdateHook +=
                 HandleCheckGrassyCompass;
 
+            // It's dangerous out there, make sure to bring your lawnmower!
+            // This'll make sure the hero has their lawnmower handy at all
+            // times.
+            if (Settings.AutomaticallyCutGrass) {
+                Modding.ModHooks.Instance.HeroUpdateHook +=
+                    HandleCheckAutoMower;
+            }
         }
 
         // We'll hook this into a bunch of Grass components' OnTriggerEnter2D
@@ -174,6 +182,21 @@ namespace GrassyKnight
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckGrassyCompass", e);
+            }
+        }
+
+        private void HandleCheckAutoMower() {
+            try {
+                // Ensure the hero has their lawnmower
+                GameObject hero = GameManager.instance?.hero_ctrl?.gameObject;
+                if (hero != null && hero.GetComponent<AutoMower>() == null) {
+                    AutoMower autoMower = hero.AddComponent<AutoMower>();
+                    autoMower.SetOfAllGrass = SetOfAllGrass;
+                    autoMower.GrassStates = GrassStates;
+                    Log("Attached autoMower to hero");
+                }
+            } catch (System.Exception e) {
+                LogException("Error in HandleCheckAutoMower", e);
             }
         }
 

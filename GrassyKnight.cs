@@ -174,11 +174,9 @@ namespace GrassyKnight
             try {
                 // Ensure the hero has their grassy compass friend
                 GameObject hero = GameManager.instance?.hero_ctrl?.gameObject;
-                if (hero != null) {
-                    GrassyCompass compass = hero.GetComponent<GrassyCompass>();
-                    if (compass == null) {
-                        hero.AddComponent<GrassyCompass>().AllGrass = GrassStates;
-                    }
+                if (hero != null &&
+                        hero.GetComponent<GrassyCompass>() == null) {
+                    hero.AddComponent<GrassyCompass>().AllGrass = GrassStates;
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckGrassyCompass", e);
@@ -247,12 +245,6 @@ namespace GrassyKnight
             LogError($"{heading}\n{IndentString(error.ToString())}");
         }
 
-        // If C# has local statics, this'd be scoped to OnShouldCut. This is
-        // the buffer we'll receive the results of our "what's colliding with
-        // the object that's colliding with us". 50 is a _way_ more than we
-        // ever expect, so hopefully it's never too few.
-        private Collider2D[] _OnShouldCutColliders = new Collider2D[50];
-
         private bool HandleShouldCut(On.GrassCut.orig_ShouldCut orig, Collider2D collision) {
             // Find out whether the original game code thinks this should be
             // cut. We'll pass this value through no matter what.
@@ -291,6 +283,7 @@ namespace GrassyKnight
 
         private void HandleSlashHit(Collider2D otherCollider, GameObject _) {
             try {
+
                 GameObject maybeGrass = otherCollider.gameObject;
                 GrassKey k = GrassKey.FromGameObject(maybeGrass);
                 if (GrassStates.Contains(k) ||

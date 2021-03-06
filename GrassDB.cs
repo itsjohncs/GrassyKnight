@@ -37,8 +37,11 @@ namespace GrassyKnight
         //
         // Format is simple. It's a series of strings seperated by semicolons.
         // First string is the version of the serialization formatter (in case
-        // we need to change the format in a back-incompat way). Each N strings
-        // after that correspond to a single GrassKey
+        // we need to change the format in a back-incompat way). That's
+        // followed by GrassKey.NumSerializationTokens number of strings that
+        // make up a single grass key, followed by a single string that holds
+        // the state of that grass, then it repeats for however many grass
+        // states are stored.
         public string Serialize() {
             var parts = new List<string>();
 
@@ -81,7 +84,7 @@ namespace GrassyKnight
                     GrassKey.NumSerializationTokens);
                 GrassKey k = GrassKey.Deserialize(grassKeyParts);
 
-                // Conver the one GrassState part into a GrassState
+                // Convert the one GrassState part into a GrassState
                 GrassState state = (GrassState)int.Parse(
                     parts[i + GrassKey.NumSerializationTokens]);
 
@@ -122,6 +125,8 @@ namespace GrassyKnight
 
                 GrassyKnight.Instance.LogDebug(
                     $"Updated state of '{k}' to {newState} (was {oldState})");
+                GrassyKnight.Instance.LogFine(
+                    $"... Serialized key: {String.Join(";", k.Serialize())}");
 
                 return true;
             } else {

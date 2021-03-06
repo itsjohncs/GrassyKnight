@@ -41,6 +41,8 @@ namespace GrassyKnight
         }
     }
 
+    // GrassKnower that just has a big list of grass it uses to know what's
+    // grass.
     class CuratedGrassKnower : GrassKnower {
         public override bool IsGrass(GameObject gameObject) {
             GrassKey k = GrassKey.FromGameObject(gameObject);

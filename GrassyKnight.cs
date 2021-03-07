@@ -103,7 +103,7 @@ namespace GrassyKnight
             // Triggered when real grass is being cut for real
             On.GrassCut.ShouldCut += HandleShouldCut;
 
-            // Lots of very callbacks all doing the same thing: making sure
+            // Lots of various callbacks all doing the same thing: making sure
             // our grassy box is full when HandleShouldCut is called.
             On.GrassBehaviour.OnTriggerEnter2D += HandleGrassCollisionEnter;
             On.GrassCut.OnTriggerEnter2D += HandleGrassCollisionEnter;

@@ -1,2 +1,2 @@
-*.sln
-*.xml
+obj/
+bin/

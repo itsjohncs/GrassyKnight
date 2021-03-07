@@ -1,4 +1,4 @@
 .PHONY: .FORCE
 
 bin/Debug/GrassyKnight.dll: .FORCE
-	msbuild GrassyKnight.csproj
+	msbuild /nowarn:MSB3277 GrassyKnight.csproj

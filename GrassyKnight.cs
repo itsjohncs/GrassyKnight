@@ -283,7 +283,6 @@ namespace GrassyKnight
 
         private void HandleSlashHit(Collider2D otherCollider, GameObject _) {
             try {
-
                 GameObject maybeGrass = otherCollider.gameObject;
                 GrassKey k = GrassKey.FromGameObject(maybeGrass);
                 if (GrassStates.Contains(k) ||

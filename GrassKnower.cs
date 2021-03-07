@@ -46,12 +46,11 @@ namespace GrassyKnight
     class CuratedGrassKnower : GrassKnower {
         public override bool IsGrass(GameObject gameObject) {
             GrassKey k = GrassKey.FromGameObject(gameObject);
-            return GrassList.AllGrass.Contains(
-                $"{k.SceneName}/{k.ObjectName} ({k.Position.x}, {k.Position.y})");
+            return GrassList.AllGrass.Contains(k);
         }
 
-        public int TotalGrass() {
-            return GrassList.AllGrass.Count;
+        public HashSet<GrassKey> GetAllGrassKeys() {
+            return GrassList.AllGrass;
         }
     }
 }

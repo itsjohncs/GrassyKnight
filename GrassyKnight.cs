@@ -82,21 +82,20 @@ namespace GrassyKnight
             if (Settings.UseHeuristicGrassKnower) {
                 SetOfAllGrass = new HeuristicGrassKnower();
                 Log("Using HeuristicGrassKnower");
+
+                // Because the heuristic grass knower doesn't know about grass
+                // until it sees it for the first time, we need to constantly
+                // look for grass each time we enter a scene.
+                UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
+                    (_, _1) => UtilityBehaviour.StartCoroutine(
+                        WaitThenFindGrass());
             } else {
                 SetOfAllGrass = new CuratedGrassKnower();
+                Log($"Using CuratedGrassKnower");
 
-                int totalGrass = ((CuratedGrassKnower)SetOfAllGrass).TotalGrass();
-                Status.GlobalTotalOverride = totalGrass;
-
-                Log($"Using CuratedGrassKnower, {totalGrass} known");
+                Modding.ModHooks.Instance.SavegameLoadHook +=
+                    _ => HandleFileEntered();
             }
-
-            // Find all the grass in the room. Once CuratedGrassKnower has
-            // a list of actual GrassKeys I'll only have to do this while using
-            // the HeuristicGrassKnower.
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
-                (_, _1) => UtilityBehaviour.StartCoroutine(
-                    WaitThenFindGrass());
 
             // Triggered when real grass is being cut for real
             On.GrassCut.ShouldCut += HandleShouldCut;
@@ -134,6 +133,18 @@ namespace GrassyKnight
             if (Settings.AutomaticallyCutGrass) {
                 Modding.ModHooks.Instance.HeroUpdateHook +=
                     HandleCheckAutoMower;
+            }
+        }
+
+        // Triggered anytime the user loads a save file or starts a new game
+        private void HandleFileEntered() {
+            try {
+                CuratedGrassKnower knower = (CuratedGrassKnower)SetOfAllGrass;
+                foreach (GrassKey k in knower.GetAllGrassKeys()) {
+                    GrassStates.TrySet(k, GrassState.Uncut);
+                }
+            } catch (System.Exception e) {
+                LogException("Error in HandleFileEntered", e);
             }
         }
 

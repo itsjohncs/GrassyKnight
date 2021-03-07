@@ -122,5 +122,9 @@ namespace GrassyKnight
                     FloatFromBase64(serialized[2]),
                     FloatFromBase64(serialized[3])));
         }
+
+        public static GrassKey FromSerializedString(string serialized) {
+            return Deserialize(serialized.Split(';'));
+        }
     }
 }

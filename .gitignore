@@ -1,2 +1,4 @@
 *.sln
 *.csproj
+*.xml
+*.dll

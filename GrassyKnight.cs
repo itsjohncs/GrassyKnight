@@ -33,6 +33,7 @@ namespace GrassyKnight
         private class MyGlobalSettings : Modding.ModSettings {
             public bool UseHeuristicGrassKnower = false;
             public bool AutomaticallyCutGrass = false;
+            public string ToggleCompassHotkey = "Space";
         }
 
         private MyGlobalSettings Settings = new MyGlobalSettings();
@@ -95,6 +96,8 @@ namespace GrassyKnight
 
                 Modding.ModHooks.Instance.SavegameLoadHook +=
                     _ => HandleFileEntered();
+                Modding.ModHooks.Instance.NewGameHook +=
+                    () => HandleFileEntered();
             }
 
             // Triggered when real grass is being cut for real
@@ -187,7 +190,27 @@ namespace GrassyKnight
                 GameObject hero = GameManager.instance?.hero_ctrl?.gameObject;
                 if (hero != null &&
                         hero.GetComponent<GrassyCompass>() == null) {
-                    hero.AddComponent<GrassyCompass>().AllGrass = GrassStates;
+                    GrassyCompass compassComponent =
+                        hero.AddComponent<GrassyCompass>();
+                    compassComponent.AllGrass = GrassStates;
+
+                    if (Settings.ToggleCompassHotkey != null) {
+                        try {
+                            KeyCode hotkey = (KeyCode)Enum.Parse(
+                                typeof(KeyCode),
+                                Settings.ToggleCompassHotkey);
+                            compassComponent.ToggleHotkey = hotkey;
+                            Log($"Hotkey for toggling the Grassy Compass " +
+                                $"set to {hotkey}");
+                        } catch (ArgumentException) {
+                            LogError(
+                                $"Unrecognized key name for " +
+                                $"ToggleCompassHotkey " +
+                                $"{Settings.ToggleCompassHotkey}. See the " +
+                                $"README.md file for a list of all valid " +
+                                $"key names.");
+                        }
+                    }
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckGrassyCompass", e);

@@ -12,6 +12,12 @@ namespace GrassyKnight
         // Maximum distance between game object and compass
         public float Radius = 1.5f;
 
+        // A hotkey that will toggle the compass visible/invisible
+        public KeyCode? ToggleHotkey = null;
+
+        // Whether the compass is toggled on or off
+        public bool ToggledOn { get; private set; } = true;
+
         // Will be used to automatically update Target every SearchInterval
         // seconds if non-null.
         public GrassDB AllGrass = null;
@@ -87,6 +93,15 @@ namespace GrassyKnight
         }
 
         private void _Update() {
+            if (ToggleHotkey != null &&
+                    Input.GetKeyDown(ToggleHotkey.Value)) {
+                ToggledOn = !ToggledOn;
+
+                string prettyValue = ToggledOn ? "on" : "off";
+                GrassyKnight.Instance.LogDebug(
+                    $"Toggling Grassy compass. It is now {prettyValue}.");
+            }
+
             // Since finding the nearest uncut grass is mildly expensive, we
             // don't do it _every_ frame (though I suspect we could get away
             // with it just fine).
@@ -127,7 +142,7 @@ namespace GrassyKnight
 
             // Hide/show the compass appropriately
             _compassGameObject.GetComponent<SpriteRenderer>().enabled =
-                Target != null;
+                ToggledOn && Target != null;
         }
     }
 }

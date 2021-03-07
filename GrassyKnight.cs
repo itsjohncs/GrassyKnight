@@ -123,6 +123,9 @@ namespace GrassyKnight
             // Hides/shows the status bar depending on UI state
             UtilityBehaviour.OnUpdate += HandleCheckStatusBarVisibility;
 
+            // Makes sure our grassy counter is always in-place
+            UtilityBehaviour.OnUpdate += HandleAttachGrassCount;
+
             // Make sure the hero always has the grassy compass component
             // attached. We could probably hook the hero object's creation to
             // be more efficient, but it's a cheap operation so imma not worry
@@ -225,7 +228,21 @@ namespace GrassyKnight
                     AutoMower autoMower = hero.AddComponent<AutoMower>();
                     autoMower.SetOfAllGrass = SetOfAllGrass;
                     autoMower.GrassStates = GrassStates;
-                    Log("Attached autoMower to hero");
+                    LogDebug("Attached autoMower to hero");
+                }
+            } catch (System.Exception e) {
+                LogException("Error in HandleCheckAutoMower", e);
+            }
+        }
+
+        private void HandleAttachGrassCount(object _, EventArgs _1) {
+            try {
+                GameObject geoCounter =
+                    GameManager.instance?.hero_ctrl?.geoCounter?.gameObject;
+                if (geoCounter != null &&
+                        geoCounter.GetComponent<GrassCount>() == null) {
+                    geoCounter.AddComponent<GrassCount>();
+                    LogDebug("Attached Grass Count to Geo Counter");
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckAutoMower", e);

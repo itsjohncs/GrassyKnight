@@ -38,7 +38,7 @@ namespace GrassyKnight
 
         private void _Start() {
             _compassGameObject = new GameObject(
-                "Grassy Compass", typeof(SpriteRenderer));
+                "Grassy Compass", typeof(TextMesh), typeof(MeshRenderer));
 
             // We'll destroy it when we're destroyed... so hopefully this keeps
             // anything else from destroying it until that happens.
@@ -46,30 +46,36 @@ namespace GrassyKnight
 
             // Create a 1x1 green sprite. Maybe one day we can have a fancy
             // arrow sprite 😳
-            Texture2D texture = new Texture2D(1, 1);
-            texture.SetPixel(0, 0, Color.green);
-            texture.Apply();
-            Sprite sprite = Sprite.Create(
-                texture,
-                new Rect(0, 0, 1, 1),
-                // This makes the pivot point the center of sprite
-                new Vector2(0.5f, 0.5f),
-                // And this makes the sprite 1 world unit by 1 world unit. The
-                // default value makes it 1/100 world unit by 1/100...
-                1);
+            // Texture2D texture = new Texture2D(1, 1);
+            // texture.SetPixel(0, 0, Color.green);
+            // texture.Apply();
+            // Sprite sprite = Sprite.Create(
+            //     texture,
+            //     new Rect(0, 0, 1, 1),
+            //     // This makes the pivot point the center of sprite
+            //     new Vector2(0.5f, 0.5f),
+            //     // And this makes the sprite 1 world unit by 1 world unit. The
+            //     // default value makes it 1/100 world unit by 1/100...
+            //     1);
 
-            SpriteRenderer renderer =
-                _compassGameObject.GetComponent<SpriteRenderer>();
-            renderer.sprite = sprite;
-            // Keep us above everything on the default layer
-            renderer.sortingOrder = 32767;
-            renderer.enabled = false;
+            // SpriteRenderer renderer =
+            //     _compassGameObject.GetComponent<SpriteRenderer>();
+            // renderer.sprite = sprite;
+            // // Keep us above everything on the default layer
+            // renderer.sortingOrder = 32767;
+            // renderer.enabled = false;
+
+            TextMesh text = _compassGameObject.GetComponent<TextMesh>();
+            text.characterSize = 0.05f;
+            text.fontSize = 100;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.text = "HELLO";
 
             // Size the sprite to be X of a game unit (though it'll be
             // affected by scaling of the knight).
             _compassGameObject.transform.parent = gameObject.transform;
             _compassGameObject.transform.localScale =
-                new Vector3(1, 1, 0) * 0.1f;
+                new Vector3(1, 1, 0);
         }
 
         public void Destroy() {
@@ -113,6 +119,7 @@ namespace GrassyKnight
                 // scene name.
                 string sceneName = GameManager.instance?.sceneName;
                 if (sceneName != null) {
+                    GrassyKnight.Instance.Log($"position of knight: {gameObject.transform.position}");
                     GrassKey? nearestGrass = AllGrass.GetNearestUncutGrass(
                         gameObject.transform.position,
                         sceneName);
@@ -141,7 +148,7 @@ namespace GrassyKnight
             }
 
             // Hide/show the compass appropriately
-            _compassGameObject.GetComponent<SpriteRenderer>().enabled =
+            _compassGameObject.GetComponent<Renderer>().enabled =
                 ToggledOn && Target != null;
         }
     }

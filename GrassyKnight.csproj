@@ -36,6 +36,11 @@
       <HintPath Condition="Exists('/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll')">/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll</HintPath>
       <HintPath Condition="Exists('..\..\..\Desktop\Hollow Knight\hollow_knight_Data\Managed\Assembly-CSharp.dll')">..\..\..\Desktop\Hollow Knight\hollow_knight_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="ModCommon">
+      <HintPath Condition="Exists('..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\ModCommon.dll')">..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\ModCommon.dll</HintPath>
+      <HintPath Condition="Exists('/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/Mods/ModCommon.dll')">/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/Mods/ModCommon.dll</HintPath>
+      <HintPath Condition="Exists('..\..\..\Desktop\Hollow Knight\hollow_knight_Data\Managed\Mods\ModCommon.dll')">..\..\..\Desktop\Hollow Knight\hollow_knight_Data\Managed\Mods\ModCommon.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <HintPath Condition="Exists('/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/System.dll')">/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/System.dll</HintPath>
     </Reference>
@@ -49,6 +54,11 @@
       <HintPath Condition="Exists('..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.dll')">..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.dll</HintPath>
       <HintPath Condition="Exists('/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/UnityEngine.dll')">/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/UnityEngine.dll</HintPath>
       <HintPath Condition="Exists('..\..\..\Desktop\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.dll')">..\..\..\Desktop\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="PlayMaker">
+      <HintPath Condition="Exists('..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\PlayMaker.dll')">..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\PlayMaker.dll</HintPath>
+      <HintPath Condition="Exists('/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/PlayMaker.dll')">/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/PlayMaker.dll</HintPath>
+      <HintPath Condition="Exists('..\..\..\Desktop\Hollow Knight\hollow_knight_Data\Managed\PlayMaker.dll')">..\..\..\Desktop\Hollow Knight\hollow_knight_Data\Managed\PlayMaker.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath Condition="Exists('..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.CoreModule.dll')">..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
@@ -76,6 +86,11 @@
       <HintPath Condition="Exists('..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.UIModule.dll')">..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.UIModule.dll</HintPath>
       <HintPath Condition="Exists('/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/UnityEngine.UIModule.dll')">/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/UnityEngine.UIModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath Condition="Exists('..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.IMGUIModule.dll')">..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath Condition="Exists('/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/UnityEngine.IMGUIModule.dll')">/Users/johnsullivan/Library/Application Support/Steam/steamapps/common/Hollow Knight/hollow_knight.app/Contents/Resources/Data/Managed/UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath Condition="Exists('..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.PhysicsModule.dll')">..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
@@ -95,6 +110,7 @@
     <Compile Include="Behaviour.cs" />
     <Compile Include="GrassyCompass.cs" />
     <Compile Include="GrassyBox.cs" />
+    <Compile Include="GrassCount.cs" />
     <Compile Include="AutoMower.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

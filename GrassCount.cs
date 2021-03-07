@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using ModCommon;
+
 
 namespace GrassyKnight
 {
@@ -24,31 +26,29 @@ namespace GrassyKnight
                 _Start();
             } catch (System.Exception e) {
                 GrassyKnight.Instance.LogException(
-                    "Error in GrassyCompass.Start()", e);
+                    "Error in GrassCount.Start()", e);
             }
         }
 
         private void _Start() {
-            _count = new GameObject(
-                "Grass Count",
-                typeof(TextMesh),
-                typeof(MeshRenderer));
+            GrassyKnight.Instance.Log("1");
+            var inventoryFSM = GameManager.instance.inventoryFSM;
+            GrassyKnight.Instance.Log("2");
+            var geoCountPrefab = (
+                inventoryFSM.gameObject.FindGameObjectInChildren("Geo"));
+            GrassyKnight.Instance.Log("3");
+            GameObject hudCanvas = GameObject.Find("_GameCameras").FindGameObjectInChildren("HudCamera").FindGameObjectInChildren("Hud Canvas");
+            GrassyKnight.Instance.Log("4");
 
-            // We'll destroy it when we're destroyed... so hopefully this keeps
-            // anything else from destroying it until that happens.
-            UnityEngine.Object.DontDestroyOnLoad(_count);
-
-            // This'll make sure we use the same canvas to render as the geo
-            // counter.
-            GameObject hudCanvas = GameObject.Find("_GameCameras").transform.Find("HudCamera").Find("Hud Canvas").gameObject;
-            _count.transform.parent = hudCanvas.transform;
-            _count.transform.position = GetText().transform.position;
-
-            TextMesh text = _count.GetComponent<TextMesh>();
-            text.characterSize = GetText().GetComponent<TextMesh>().characterSize;
-            text.fontSize = GetText().GetComponent<TextMesh>().fontSize;
-            text.anchor = TextAnchor.MiddleCenter;
-            text.text = "HELLO";
+            _count = UnityEngine.Object.Instantiate(geoCountPrefab, hudCanvas.transform, true);
+            GrassyKnight.Instance.Log("5");
+            _count.transform.position += new Vector3(2.2f, 11.4f);
+            _count.GetComponent<DisplayItemAmount>().playerDataInt = "Geo";
+            _count.GetComponent<DisplayItemAmount>().textObject.text = "foobar"; // immediately gets rewritten i bet
+            // _count.GetComponent<SpriteRenderer>().sprite = sprite;
+            _count.SetActive(true);
+            _count.GetComponent<BoxCollider2D>().size = new Vector2(1.5f, 1f); // wtf, srsly?
+            _count.GetComponent<BoxCollider2D>().offset = new Vector2(0.5f, 0f);
         }
 
         public void Destroy() {
@@ -73,11 +73,11 @@ namespace GrassyKnight
         void _Update() {
             MaybeResize();
 
-            _count.GetComponent<Renderer>().sortingOrder = 32767;
-            _count.GetComponent<Renderer>().enabled = true;
-            _count.transform.position = GetText().transform.position;
-            GrassyKnight.Instance.Log($"Position of geo counter {gameObject.transform.position}");
-            GrassyKnight.Instance.Log($"Position of geo counter text {GetText().transform.position}");
+            // _count.GetComponent<Renderer>().sortingOrder = 32767;
+            // _count.GetComponent<Renderer>().enabled = true;
+            // _count.transform.position = GetText().transform.position;
+            // GrassyKnight.Instance.Log($"Position of geo counter {gameObject.transform.position}");
+            // GrassyKnight.Instance.Log($"Position of geo counter text {GetText().transform.position}");
         }
 
         // Makes the counter smaller

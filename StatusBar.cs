@@ -6,10 +6,6 @@ namespace GrassyKnight
 {
     class StatusBar
     {
-        // If non-null, this'll be used as the global total regardless of what
-        // GrassStats values are given.
-        public int? GlobalTotalOverride = null;
-
         private const int _FONT_SIZE = 36;
         private const int _MARGIN_TOP = 20;
 
@@ -52,10 +48,10 @@ namespace GrassyKnight
             textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;
         }
 
-        private string PrettyStats(GrassStats stats, int? totalOverride = null)
+        private string PrettyStats(GrassStats stats)
         {
             int struck = stats[GrassState.Cut] + stats[GrassState.ShouldBeCut];
-            string result = $"{struck}/{totalOverride ?? stats.Total()}";
+            string result =  $"{struck}/{stats.Total()}";
             return result;
         }
 
@@ -76,7 +72,7 @@ namespace GrassyKnight
                 statusText += $"{PrettyStats(scene)} ";
             }
 
-            statusText += $"\n{PrettyStats(global, GlobalTotalOverride)} ";
+            statusText += $"\n{PrettyStats(global)} ";
             _textOnCanvas.GetComponent<Text>().text = statusText;
         }
     }

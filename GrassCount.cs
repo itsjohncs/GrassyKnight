@@ -19,6 +19,9 @@ namespace GrassyKnight
         // scale it down by this factor.
         public float Scale = 0.5f;
 
+        // Used to get the grass stats as needed
+        public GrassDB AllGrass = null;
+
         private GameObject _count = null;
 
         public void Start() {
@@ -31,24 +34,25 @@ namespace GrassyKnight
         }
 
         private void _Start() {
-            GrassyKnight.Instance.Log("1");
             var inventoryFSM = GameManager.instance.inventoryFSM;
-            GrassyKnight.Instance.Log("2");
             var geoCountPrefab = (
                 inventoryFSM.gameObject.FindGameObjectInChildren("Geo"));
-            GrassyKnight.Instance.Log("3");
-            GameObject hudCanvas = GameObject.Find("_GameCameras").FindGameObjectInChildren("HudCamera").FindGameObjectInChildren("Hud Canvas");
-            GrassyKnight.Instance.Log("4");
+            GameObject hudCanvas = (
+                GameObject.Find("_GameCameras")
+                          .FindGameObjectInChildren("HudCamera")
+                          .FindGameObjectInChildren("Hud Canvas"));
 
-            _count = UnityEngine.Object.Instantiate(geoCountPrefab, hudCanvas.transform, true);
-            GrassyKnight.Instance.Log("5");
-            _count.transform.position += new Vector3(2.2f, 11.4f);
-            _count.GetComponent<DisplayItemAmount>().playerDataInt = "Geo";
-            _count.GetComponent<DisplayItemAmount>().textObject.text = "foobar"; // immediately gets rewritten i bet
+            _count = UnityEngine.Object.Instantiate(
+                geoCountPrefab, hudCanvas.transform, true);
+            _count.transform.localScale = Vector3.one * Scale;
+
+            _count.GetComponent<DisplayItemAmount>().playerDataInt = "none";
+            _count.GetComponent<DisplayItemAmount>().textObject.text = "...";
             // _count.GetComponent<SpriteRenderer>().sprite = sprite;
             _count.SetActive(true);
-            _count.GetComponent<BoxCollider2D>().size = new Vector2(1.5f, 1f); // wtf, srsly?
+            _count.GetComponent<BoxCollider2D>().size = new Vector2(1.5f, 1f);
             _count.GetComponent<BoxCollider2D>().offset = new Vector2(0.5f, 0f);
+            // _count.FindGameObjectInChildren("Geo Amount").transform.position -= new Vector3(0.3f, 0, 0);
         }
 
         public void Destroy() {
@@ -82,22 +86,22 @@ namespace GrassyKnight
 
         // Makes the counter smaller
         void MaybeResize() {
-            // if (gameObject.transform.localScale.x == Scale && 
-            //         gameObject.transform.localScale.y == Scale &&
-            //         gameObject.transform.localScale.z == Scale) {
-            //     // Nothing to do!
-            //     return;
-            // }
+            if (gameObject.transform.localScale.x == Scale && 
+                    gameObject.transform.localScale.y == Scale &&
+                    gameObject.transform.localScale.z == Scale) {
+                // Nothing to do!
+                return;
+            }
 
-            // // Scaling will end up moving the position of the children as well.
-            // // To correct this, we look at how much one child moved after
-            // // scaling, and then we move ourselves in the opposite direction
-            // // to correct all of our children at once.
-            // GameObject child = GetText();
-            // Vector3 startPosition = child.GetComponent<Renderer>().bounds.min;
-            // gameObject.transform.localScale = Vector3.one * Scale;
-            // gameObject.transform.position -=
-            //     child.GetComponent<Renderer>().bounds.min - startPosition;
+            // Scaling will end up moving the position of the children as well.
+            // To correct this, we look at how much one child moved after
+            // scaling, and then we move ourselves in the opposite direction
+            // to correct all of our children at once.
+            GameObject child = GetText();
+            Vector3 startPosition = child.GetComponent<Renderer>().bounds.min;
+            gameObject.transform.localScale = Vector3.one * Scale;
+            gameObject.transform.position -=
+                child.GetComponent<Renderer>().bounds.min - startPosition;
         }
 
         GameObject GetText() {
@@ -109,6 +113,18 @@ namespace GrassyKnight
             }
 
             return result;
+        }
+
+        private string PrettyStats(GrassStats stats)
+        {
+            int struck = stats[GrassState.Cut] + stats[GrassState.ShouldBeCut];
+            string result =  $"{struck}/{stats.Total()}";
+            return result;
+        }
+
+        public void UpdateStats(GrassStats scene, GrassStats global) {
+            _count.GetComponent<DisplayItemAmount>().textObject.text =
+                $"{PrettyStats(scene)} -- {PrettyStats(global)}";
         }
     }
 }

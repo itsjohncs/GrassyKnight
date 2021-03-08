@@ -243,6 +243,7 @@ namespace GrassyKnight
                         geoCounter.GetComponent<GrassCount>() == null) {
                     geoCounter.AddComponent<GrassCount>();
                     LogDebug("Attached Grass Count to Geo Counter");
+                    UpdateStatus();
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckAutoMower", e);
@@ -279,6 +280,9 @@ namespace GrassyKnight
                 
                 if (sceneName != null) {
                     Status.Update(
+                        GrassStates.GetStatsForScene(sceneName),
+                        GrassStates.GetGlobalStats());
+                    GameManager.instance?.hero_ctrl?.geoCounter?.gameObject?.GetComponent<GrassCount>()?.UpdateStats(
                         GrassStates.GetStatsForScene(sceneName),
                         GrassStates.GetGlobalStats());
                     Status.Visible = true;

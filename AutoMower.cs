@@ -45,12 +45,14 @@ namespace GrassyKnight
             }
         }
 
-        private static bool IsPointOnScreen(Vector2 point) {
+        private static bool IsPointOnScreenWithPadding(Vector2 point, float padding = 0.1f) {
             Vector2 viewLocalPoint =
                 UnityEngine.Camera.main.WorldToViewportPoint(point);
             return
-                viewLocalPoint.x >= 0 && viewLocalPoint.x <= 1 &&
-                viewLocalPoint.y >= 0 && viewLocalPoint.y <= 1;
+                viewLocalPoint.x >= padding &&
+                viewLocalPoint.x <= 1 - padding &&
+                viewLocalPoint.y >= padding &&
+                viewLocalPoint.y <= 1 - padding;
         }
 
         private List<GameObject> GetGrassOnScreen() {
@@ -63,7 +65,7 @@ namespace GrassyKnight
                 GrassState? state = GrassStates.TryGet(k);
                 bool isUncut = state == GrassState.Uncut || state == null;
                 if (isUncut &&
-                        IsPointOnScreen(maybeGrass.transform.position) &&
+                        IsPointOnScreenWithPadding(maybeGrass.transform.position) &&
                         SetOfAllGrass.IsGrass(maybeGrass)) {
                     result.Add(maybeGrass);
                 }

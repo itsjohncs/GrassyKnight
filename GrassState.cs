@@ -1,4 +1,4 @@
-namespace GrassyKnight
+namespace GrassPls
 {
     enum GrassState {
         Uncut,

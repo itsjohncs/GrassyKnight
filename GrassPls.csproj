@@ -7,8 +7,8 @@
     <ProjectGuid>{542DBA18-73A8-4824-8BB3-00B43529701F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GrassyKnight</RootNamespace>
-    <AssemblyName>GrassyKnight</AssemblyName>
+    <RootNamespace>GrassPls</RootNamespace>
+    <AssemblyName>GrassPls</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -84,7 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GrassyKnight.cs" />
+    <Compile Include="GrassPls.cs" />
     <Compile Include="GrassDB.cs" />
     <Compile Include="GrassKey.cs" />
     <Compile Include="GrassState.cs" />

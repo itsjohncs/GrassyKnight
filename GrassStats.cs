@@ -1,6 +1,6 @@
 using System;
 
-namespace GrassyKnight
+namespace GrassPls
 {
     class GrassStats {
         // Maps from GrassState (ex: Cut) to number of grass in that state. I'm

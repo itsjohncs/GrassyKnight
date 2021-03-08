@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GrassyKnight
+namespace GrassPls
 {
     abstract class StatusBar {
         public abstract bool Visible { get; set; }
@@ -70,7 +70,7 @@ namespace GrassyKnight
             }
             else if (scene[GrassState.Cut] + scene[GrassState.ShouldBeCut] - scene.Total() == 0)
             {
-                statusText += $"--  ";
+                statusText += $"  ";
             }
             else
             {
@@ -99,7 +99,7 @@ namespace GrassyKnight
         public TopMiddleStatusBar(bool showShamefulGrass) {
             ShowShamefulGrass = showShamefulGrass;
 
-            _canvas = new GameObject("GrassyKnight StatusBar Canvas",
+            _canvas = new GameObject("GrassPls StatusBar Canvas",
                                      typeof(Canvas));
             UnityEngine.Object.DontDestroyOnLoad(_canvas);
 
@@ -109,7 +109,7 @@ namespace GrassyKnight
             canvasComponent.enabled = false;
 
             _textOnCanvas = new GameObject(
-                "GrassyKnight StatusBar",
+                "GrassPls StatusBar",
                 typeof(Text),
                 typeof(CanvasRenderer));
             UnityEngine.Object.DontDestroyOnLoad(_textOnCanvas);
@@ -128,7 +128,7 @@ namespace GrassyKnight
 
             Text textComponent = _textOnCanvas.GetComponent<Text>();
             textComponent.font = Modding.CanvasUtil.TrajanBold;
-            textComponent.text = "Loading GrassyKnight...";
+            textComponent.text = "Loading GrassPls...";
             textComponent.fontSize = _FONT_SIZE;
             textComponent.alignment = TextAnchor.MiddleCenter;
             textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;

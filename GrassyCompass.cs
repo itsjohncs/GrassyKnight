@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace GrassyKnight
+namespace GrassPls
 {
     // Attach to the hero to give them a grassy compass friend
     class GrassyCompass : MonoBehaviour {
@@ -31,7 +31,7 @@ namespace GrassyKnight
             try {
                 _Start();
             } catch (System.Exception e) {
-                GrassyKnight.Instance.LogException(
+                GrassPls.Instance.LogException(
                     "Error in GrassyCompass.Start()", e);
             }
         }
@@ -76,7 +76,7 @@ namespace GrassyKnight
             try {
                 UnityEngine.Object.Destroy(_compassGameObject);
             } catch (System.Exception e) {
-                GrassyKnight.Instance.LogException(
+                GrassPls.Instance.LogException(
                     "Error in GrassyCompass.Destroy()", e);
             }
 
@@ -87,7 +87,7 @@ namespace GrassyKnight
             try {
                 _Update();
             } catch (System.Exception e) {
-                GrassyKnight.Instance.LogException(
+                GrassPls.Instance.LogException(
                     "Error in GrassyCompass.Update()", e);
             }
         }
@@ -98,15 +98,12 @@ namespace GrassyKnight
                 ToggledOn = !ToggledOn;
 
                 string prettyValue = ToggledOn ? "on" : "off";
-                GrassyKnight.Instance.LogDebug(
+                GrassPls.Instance.LogDebug(
                     $"Toggling Grassy compass. It is now {prettyValue}.");
             }
 
-            // Since finding the nearest uncut grass is mildly expensive, we
-            // don't do it _every_ frame (though I suspect we could get away
-            // with it just fine).
-            if (AllGrass != null &&
-                    _lastSearchTime + SearchInterval < Time.time) {
+            // It seems to be fine with doing it every frame, so we'll do that
+            if (AllGrass != null ) {//&& _lastSearchTime + SearchInterval < Time.time) {
                 // Can't use the game object's .scene.name because the hero
                 // (the main object we want to attach this to) and any other
                 // object set to not get destroyed on load have a garbage
@@ -120,7 +117,7 @@ namespace GrassyKnight
 
                     // Very handy debug message in all sorts of situations
                     if (newTarget != Target) {
-                        GrassyKnight.Instance.LogDebug(
+                        GrassPls.Instance.LogDebug(
                             $"Nearest uncut grass is now '{nearestGrass}'");
                     }
 

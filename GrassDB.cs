@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace GrassyKnight
+namespace GrassPls
 {
     // Responsible for storing the status of grass and letting us run various
     // queries against all the grass.
@@ -29,7 +29,7 @@ namespace GrassyKnight
 
         private const string _serializationVersion = "1";
 
-        // Serializes the DB into a single string
+        // Serializes the DB into a single string.
         //
         // HollowKnight doesn't ship with
         // System.Runtime.Serialization.Formatters.dll so I don't think
@@ -123,9 +123,9 @@ namespace GrassyKnight
                 GlobalStats.HandleUpdate(oldState, newState);
                 OnStatsChanged?.Invoke(this, EventArgs.Empty);
 
-                GrassyKnight.Instance.LogDebug(
+                GrassPls.Instance.LogDebug(
                     $"Updated state of '{k}' to {newState} (was {oldState})");
-                GrassyKnight.Instance.LogFine(
+                GrassPls.Instance.LogFine(
                     $"... Serialized key: {String.Join(";", k.Serialize())}");
 
                 return true;

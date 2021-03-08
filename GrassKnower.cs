@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace GrassyKnight
+namespace GrassPls
 {
     // Responsible for knowing what is grass and what is not
     abstract class GrassKnower {

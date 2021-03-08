@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GrassyKnight
+namespace GrassPls
 {
     // A handy box to store some grass in. Used to store a reference to the
     // grass that ShouldCut is getting called for because ShouldCut is a
@@ -20,7 +20,7 @@ namespace GrassyKnight
 
         public GrassyBox(GameObject value) {
             if (_hasValue) {
-                GrassyKnight.Instance.LogError(
+                GrassPls.Instance.LogError(
                     $"Already have value in box (current value is {_value}, " +
                     $"trying to store value {value}).");
             } else {

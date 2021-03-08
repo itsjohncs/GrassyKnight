@@ -35,7 +35,7 @@ namespace GrassPls
             public bool AutomaticallyCutGrass = false;
             public string ToggleCompassHotkey = "Space";
             public string StatusBarMode = "under-soul";
-            public bool DisableCompass = true;
+            public bool DisableCompass = false;
         }
 
         private MyGlobalSettings Settings = new MyGlobalSettings();

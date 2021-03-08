@@ -14,6 +14,7 @@ You can edit the file with a text editor (such as Notepad). Here's an example of
   "AutomaticallyCutGrass": false,
   "ToggleCompassHotkey": "Space",
   "StatusBarMode": "under-soul",
+  "DisableCompass": false,
   "BoolValues": {},
   "FloatValues": {},
   "IntValues": {},
@@ -22,6 +23,11 @@ You can edit the file with a text editor (such as Notepad). Here's an example of
 ```
 
 Read on for a full list of the settings available to you and what they mean.
+
+### DisableCompass
+
+Set to true to disable the compass completely. You will not be able to toggle
+it on using `ToggleCompassHotkey`.
 
 ### StatusBarMode
 

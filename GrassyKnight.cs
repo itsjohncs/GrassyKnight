@@ -35,6 +35,7 @@ namespace GrassyKnight
             public bool AutomaticallyCutGrass = false;
             public string ToggleCompassHotkey = "Space";
             public string StatusBarMode = "under-soul";
+            public bool DisableCompass = false;
         }
 
         private MyGlobalSettings Settings = new MyGlobalSettings();
@@ -143,8 +144,10 @@ namespace GrassyKnight
             // attached. We could probably hook the hero object's creation to
             // be more efficient, but it's a cheap operation so imma not worry
             // about it.
-            Modding.ModHooks.Instance.HeroUpdateHook +=
-                HandleCheckGrassyCompass;
+            if (!Settings.DisableCompass) {
+                Modding.ModHooks.Instance.HeroUpdateHook +=
+                    HandleCheckGrassyCompass;
+            }
 
             // It's dangerous out there, make sure to bring your lawnmower!
             // This'll make sure the hero has their lawnmower handy at all

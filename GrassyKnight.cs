@@ -118,7 +118,8 @@ namespace GrassyKnight
             // if they change.
             GrassStates.OnStatsChanged += (_, _1) => UpdateStatus();
             UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
-                (scene, _) => UpdateStatus(scene.name);
+                (_, _1) => UtilityBehaviour.StartCoroutine(
+                    WaitThenUpdateStatus());
 
             // Hides/shows the status bar depending on UI state
             UtilityBehaviour.OnUpdate += HandleCheckStatusBarVisibility;
@@ -254,12 +255,17 @@ namespace GrassyKnight
             }
         }
 
-        private void UpdateStatus(string sceneName = null) {
+        // Meant to be called when a new scene is entered
+        private IEnumerator WaitThenUpdateStatus() {
+            // The docs suggest wait a moment to make sure everything's set
+            yield return new WaitForSeconds(0.1f);
+
+            UpdateStatus();
+        }
+
+        private void UpdateStatus() {
             try {
-                if (sceneName == null) {
-                    sceneName = GameManager.instance?.sceneName;
-                }
-                
+                string sceneName = GameManager.instance?.sceneName;
                 if (sceneName != null) {
                     Status.Update(
                         GrassStates.GetStatsForScene(sceneName),

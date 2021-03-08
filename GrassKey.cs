@@ -3,7 +3,7 @@ using System.Text;
 using UnityEngine;
 
 
-namespace GrassPls
+namespace GrassyKnight
 {
     readonly struct GrassKey {
         public readonly string SceneName;

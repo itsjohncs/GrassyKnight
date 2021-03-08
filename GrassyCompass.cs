@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 
-namespace GrassPls
+namespace GrassyKnight
 {
     // Attach to the hero to give them a grassy compass friend
     class GrassyCompass : MonoBehaviour {
@@ -28,7 +28,7 @@ namespace GrassPls
             try {
                 _Start();
             } catch (System.Exception e) {
-                GrassPls.Instance.LogException(
+                GrassyKnight.Instance.LogException(
                     "Error in GrassyCompass.Start()", e);
             }
         }
@@ -73,7 +73,7 @@ namespace GrassPls
             try {
                 UnityEngine.Object.Destroy(_compassGameObject);
             } catch (System.Exception e) {
-                GrassPls.Instance.LogException(
+                GrassyKnight.Instance.LogException(
                     "Error in GrassyCompass.Destroy()", e);
             }
 
@@ -84,7 +84,7 @@ namespace GrassPls
             try {
                 _Update();
             } catch (System.Exception e) {
-                GrassPls.Instance.LogException(
+                GrassyKnight.Instance.LogException(
                     "Error in GrassyCompass.Update()", e);
             }
         }
@@ -95,7 +95,7 @@ namespace GrassPls
                 ToggledOn = !ToggledOn;
 
                 string prettyValue = ToggledOn ? "on" : "off";
-                GrassPls.Instance.LogDebug(
+                GrassyKnight.Instance.LogDebug(
                     $"Toggling Grassy compass. It is now {prettyValue}.");
             }
 
@@ -114,7 +114,7 @@ namespace GrassPls
 
                     // Very handy debug message in all sorts of situations
                     if (newTarget != Target) {
-                        GrassPls.Instance.LogDebug(
+                        GrassyKnight.Instance.LogDebug(
                             $"Nearest uncut grass is now '{nearestGrass}'");
                     }
 

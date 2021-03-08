@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace GrassPls
+namespace GrassyKnight
 {
     // Responsible for storing the status of grass and letting us run various
     // queries against all the grass.
@@ -123,9 +123,9 @@ namespace GrassPls
                 GlobalStats.HandleUpdate(oldState, newState);
                 OnStatsChanged?.Invoke(this, EventArgs.Empty);
 
-                GrassPls.Instance.LogDebug(
+                GrassyKnight.Instance.LogDebug(
                     $"Updated state of '{k}' to {newState} (was {oldState})");
-                GrassPls.Instance.LogFine(
+                GrassyKnight.Instance.LogFine(
                     $"... Serialized key: {String.Join(";", k.Serialize())}");
 
                 return true;

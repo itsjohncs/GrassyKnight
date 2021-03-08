@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GrassPls
+namespace GrassyKnight
 {
     abstract class StatusBar {
         public abstract bool Visible { get; set; }
@@ -25,7 +25,7 @@ namespace GrassPls
 
         public UnderSoulStatusBar()
         {
-            _canvas = new GameObject("GrassPls StatusBar Canvas",
+            _canvas = new GameObject("Grassy StatusBar Canvas",
                                      typeof(Canvas));
             UnityEngine.Object.DontDestroyOnLoad(_canvas);
 
@@ -35,7 +35,7 @@ namespace GrassPls
             canvasComponent.enabled = false;
 
             _textOnCanvas = new GameObject(
-                "GrassPls StatusBar",
+                "Grassy StatusBar",
                 typeof(Text),
                 typeof(CanvasRenderer));
             UnityEngine.Object.DontDestroyOnLoad(_textOnCanvas);
@@ -47,7 +47,7 @@ namespace GrassPls
                     0);
             Text textComponent = _textOnCanvas.GetComponent<Text>();
             textComponent.font = Modding.CanvasUtil.TrajanBold;
-            textComponent.text = "Loading GrassPls...";
+            textComponent.text = "loading...";
             textComponent.fontSize = _FONT_SIZE;
             textComponent.alignment = TextAnchor.MiddleCenter;
             textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;
@@ -99,7 +99,7 @@ namespace GrassPls
         public TopMiddleStatusBar(bool showShamefulGrass) {
             ShowShamefulGrass = showShamefulGrass;
 
-            _canvas = new GameObject("GrassPls StatusBar Canvas",
+            _canvas = new GameObject("GrassyKnight StatusBar Canvas",
                                      typeof(Canvas));
             UnityEngine.Object.DontDestroyOnLoad(_canvas);
 
@@ -109,7 +109,7 @@ namespace GrassPls
             canvasComponent.enabled = false;
 
             _textOnCanvas = new GameObject(
-                "GrassPls StatusBar",
+                "GrassyKnight StatusBar",
                 typeof(Text),
                 typeof(CanvasRenderer));
             UnityEngine.Object.DontDestroyOnLoad(_textOnCanvas);
@@ -128,7 +128,7 @@ namespace GrassPls
 
             Text textComponent = _textOnCanvas.GetComponent<Text>();
             textComponent.font = Modding.CanvasUtil.TrajanBold;
-            textComponent.text = "Loading GrassPls...";
+            textComponent.text = "Loading GrassyKnight...";
             textComponent.fontSize = _FONT_SIZE;
             textComponent.alignment = TextAnchor.MiddleCenter;
             textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;

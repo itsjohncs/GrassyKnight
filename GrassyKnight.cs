@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GrassPls
+namespace GrassyKnight
 {
-    public class GrassPls : Modding.Mod {
+    public class GrassyKnight : Modding.Mod {
         // In a previous version we accessed ModSettings.BoolValues directly,
         // but it looks like the latest code in the Modding.API repo no longer
         // has BoolValues as a member at all. This way of using ModSettings is
@@ -46,7 +46,7 @@ namespace GrassPls
 
         // Will be set to the exactly one ModMain in existance... Trusting
         // Modding.Mod to ensure that ModMain is only ever instantiated once...
-        public static GrassPls Instance = null;
+        public static GrassyKnight Instance = null;
 
         // Stores which grass is cut and allows queries (like "where's the
         // nearest uncut grass?")
@@ -68,8 +68,8 @@ namespace GrassPls
 
         public override string GetVersion() => "1.1.0";
 
-        public GrassPls() : base("GrassPls") {
-            GrassPls.Instance = this;
+        public GrassyKnight() : base("Grassy Knight") {
+            GrassyKnight.Instance = this;
         }
 
         public override void Initialize() {

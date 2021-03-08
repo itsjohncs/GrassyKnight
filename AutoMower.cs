@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GrassPls
+namespace GrassyKnight
 {
     class AutoMower : MonoBehaviour {
         // The last time we searched for grass
@@ -22,7 +22,7 @@ namespace GrassPls
             try {
                 _Update();
             } catch (System.Exception e) {
-                GrassPls.Instance.LogException(
+                GrassyKnight.Instance.LogException(
                     "Error in AutoMower.Update()", e);
             }
         }
@@ -35,7 +35,7 @@ namespace GrassPls
             if (_lastSearchedAt + SearchInterval <= Time.time) {
                 foreach (GameObject grass in GetGrassOnScreen()) {
                     if (!SlashGrass(grass)) {
-                        GrassPls.Instance.LogError(
+                        GrassyKnight.Instance.LogError(
                             $"Failed to slash on screen grass.");
                         break;
                     }

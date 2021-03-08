@@ -1,10 +1,10 @@
-# GrassPls
+# Grassy Knight
 
 Grass!
 
 ## Settings
 
-Settings for GrassPls are located in the file `GrassPls.GlobalSettings.json` which you can find in the same folder that your saved games are stored.
+Settings for Grassy Knight are located in the file `GrassyKnight.GlobalSettings.json` which you can find in the same folder that your saved games are stored.
 
 You can edit the file with a text editor (such as Notepad). Here's an example of what you might find in it:
 
@@ -375,7 +375,7 @@ The key that will hide or show the Grassward Compass. Here is a list of all the 
 
 **tl;dr**: Leave this set to `false` unless you're helping with the development of the mod.
 
-GrassPls normally uses a big list to know what is grass and what is not grass (ex: Elder Bug is an example of a thing that is not grass). But there is another option, you can also use a "heuristic" instead (a fancy word that basically means "approximation").
+Grassy Knight normally uses a big list to know what is grass and what is not grass (ex: Elder Bug is an example of a thing that is not grass). But there is another option, you can also use a "heuristic" instead (a fancy word that basically means "approximation").
 
 This heuristic is not as good as the list in most ways. However, it is very useful for doing runs that help figure out what objects should be in that big list.
 

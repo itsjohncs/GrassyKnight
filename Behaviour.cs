@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GrassPls
+namespace GrassyKnight
 {
 	// For when you just want a MonoBehavior... We use this as a simple means
 	// of getting access to Unity's coroutine scheduler.

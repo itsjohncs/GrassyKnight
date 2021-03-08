@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace GrassPls
+namespace GrassyKnight
 {
     // A curated list of all the cuttable grass in the game! Used the data
     // aggregated at grass.johncs.com as well as a run I made with noclip and

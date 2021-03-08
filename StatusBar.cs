@@ -62,23 +62,8 @@ namespace GrassyKnight
 
         public override void Update(GrassStats scene, GrassStats global)
         {
-            string statusText = "";
-
-            if (scene == null)
-            {
-                statusText += $"Pls...";
-            }
-            else if (scene[GrassState.Cut] + scene[GrassState.ShouldBeCut] - scene.Total() == 0)
-            {
-                statusText += $"  ";
-            }
-            else
-            {
-                statusText += $"{PrettyStats(scene)} ";
-            }
-
-            statusText += $"\n{PrettyStats(global)} ";
-            _textOnCanvas.GetComponent<Text>().text = statusText;
+            _textOnCanvas.GetComponent<Text>().text =
+                $"{PrettyStats(scene)}\n{PrettyStats(global)}";
         }
     }
 

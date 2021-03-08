@@ -18,11 +18,8 @@ namespace GrassPls
         // Whether the compass is toggled on or off
         public bool ToggledOn { get; private set; } = true;
 
-        // Will be used to automatically update Target every SearchInterval
-        // seconds if non-null.
+        // Will be used to automatically update Target every frame if non-null
         public GrassDB AllGrass = null;
-        public float SearchInterval = 0.5f;
-        private float _lastSearchTime = 0;
 
         // The actual compass object
         private GameObject _compassGameObject = null;
@@ -103,7 +100,7 @@ namespace GrassPls
             }
 
             // It seems to be fine with doing it every frame, so we'll do that
-            if (AllGrass != null ) {//&& _lastSearchTime + SearchInterval < Time.time) {
+            if (ToggledOn && AllGrass != null) {
                 // Can't use the game object's .scene.name because the hero
                 // (the main object we want to attach this to) and any other
                 // object set to not get destroyed on load have a garbage
@@ -122,8 +119,6 @@ namespace GrassPls
                     }
 
                     Target = newTarget;
-
-                    _lastSearchTime = Time.time;
                 }
             }
 

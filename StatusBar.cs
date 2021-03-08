@@ -65,7 +65,7 @@ namespace GrassyKnight
             }
             else if (scene[GrassState.Cut] + scene[GrassState.ShouldBeCut] - scene.Total() == 0)
             {
-                statusText += $"—  ";
+                statusText += $"--  ";
             }
             else
             {

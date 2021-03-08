@@ -13,6 +13,7 @@ You can edit the file with a text editor (such as Notepad). Here's an example of
   "UseHeuristicGrassKnower": false,
   "AutomaticallyCutGrass": false,
   "ToggleCompassHotkey": "Space",
+  "StatusBarMode": "under-soul",
   "BoolValues": {},
   "FloatValues": {},
   "IntValues": {},
@@ -21,6 +22,18 @@ You can edit the file with a text editor (such as Notepad). Here's an example of
 ```
 
 Read on for a full list of the settings available to you and what they mean.
+
+### StatusBarMode
+
+This changes how the mod shows you your grassy progress. There are currently three modes:
+
+**under-soul** places the counts underneath the soul meter. This is the default.
+
+![](under-soul-status.png)
+
+**top-middle** and **top-middle-with-shame** places the counts at the top middle of the screen. The shame variation shows counts of shameful grass as well, which is useful for mod development and testing.
+
+![](top-middle-status.png)
 
 ### ToggleCompassHotkey
 

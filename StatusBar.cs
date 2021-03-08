@@ -4,7 +4,12 @@ using UnityEngine.UI;
 
 namespace GrassyKnight
 {
-    class StatusBar
+    abstract class StatusBar {
+        public abstract bool Visible { get; set; }
+        public abstract void Update(GrassStats scene, GrassStats global);
+    }
+
+    class UnderSoulStatusBar : StatusBar
     {
         private const int _FONT_SIZE = 36;
         private const int _MARGIN_TOP = 20;
@@ -12,13 +17,13 @@ namespace GrassyKnight
         private GameObject _canvas;
         private GameObject _textOnCanvas;
 
-        public bool Visible
+        public override bool Visible
         {
             get => _canvas.GetComponent<Canvas>().enabled;
             set => _canvas.GetComponent<Canvas>().enabled = value;
         }
 
-        public StatusBar()
+        public UnderSoulStatusBar()
         {
             _canvas = new GameObject("GrassPls StatusBar Canvas",
                                      typeof(Canvas));
@@ -55,7 +60,7 @@ namespace GrassyKnight
             return result;
         }
 
-        public void Update(GrassStats scene, GrassStats global)
+        public override void Update(GrassStats scene, GrassStats global)
         {
             string statusText = "";
 
@@ -73,6 +78,82 @@ namespace GrassyKnight
             }
 
             statusText += $"\n{PrettyStats(global)} ";
+            _textOnCanvas.GetComponent<Text>().text = statusText;
+        }
+    }
+
+    class TopMiddleStatusBar : StatusBar {
+        private const int _FONT_SIZE = 21;
+        private const int _MARGIN_TOP = 10;
+
+        private GameObject _canvas;
+        private GameObject _textOnCanvas;
+
+        public override bool Visible {
+            get => _canvas.GetComponent<Canvas>().enabled;
+            set => _canvas.GetComponent<Canvas>().enabled = value;
+        }
+
+        public bool ShowShamefulGrass = false;
+
+        public TopMiddleStatusBar(bool showShamefulGrass) {
+            ShowShamefulGrass = showShamefulGrass;
+
+            _canvas = new GameObject("GrassyKnight StatusBar Canvas",
+                                     typeof(Canvas));
+            UnityEngine.Object.DontDestroyOnLoad(_canvas);
+
+            Canvas canvasComponent = _canvas.GetComponent<Canvas>();
+            canvasComponent.pixelPerfect = true;
+            canvasComponent.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvasComponent.enabled = false;
+
+            _textOnCanvas = new GameObject(
+                "GrassyKnight StatusBar",
+                typeof(Text),
+                typeof(CanvasRenderer));
+            UnityEngine.Object.DontDestroyOnLoad(_textOnCanvas);
+            _textOnCanvas.transform.parent = canvasComponent.transform;
+            _textOnCanvas.transform.localPosition =
+                new Vector3(
+                    0,
+                    // Aligns the vertical center to top of screen
+                    canvasComponent.pixelRect.height / 2
+                        // Adjusts downwards so top of text is now along top
+                        // of screen.
+                        - _FONT_SIZE / 2
+                        // Finally some margin space to taste. uwu.
+                        - _MARGIN_TOP,
+                    0);
+
+            Text textComponent = _textOnCanvas.GetComponent<Text>();
+            textComponent.font = Modding.CanvasUtil.TrajanBold;
+            textComponent.text = "Loading GrassyKnight...";
+            textComponent.fontSize = _FONT_SIZE;
+            textComponent.alignment = TextAnchor.MiddleCenter;
+            textComponent.horizontalOverflow = HorizontalWrapMode.Overflow;
+        }
+
+        private string PrettyStats(GrassStats stats) {
+            int struck = stats[GrassState.Cut] + stats[GrassState.ShouldBeCut];
+            string result =  $"{struck}/{stats.Total()}";
+            if (ShowShamefulGrass && stats[GrassState.ShouldBeCut] > 0) {
+                result += $" ({stats[GrassState.ShouldBeCut]} shameful)";
+            }
+            return result;
+        }
+
+        public override void Update(GrassStats scene, GrassStats global) {
+            string statusText = "";
+
+            if (scene == null) {
+                statusText += $"(not in a room) ";
+            } else {
+                statusText += $"in room: {PrettyStats(scene)} ";
+            }
+
+            statusText += $"-- globally: {PrettyStats(global)}";
+
             _textOnCanvas.GetComponent<Text>().text = statusText;
         }
     }

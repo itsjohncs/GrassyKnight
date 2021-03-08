@@ -34,6 +34,7 @@ namespace GrassyKnight
             public bool UseHeuristicGrassKnower = false;
             public bool AutomaticallyCutGrass = false;
             public string ToggleCompassHotkey = "Space";
+            public string StatusBarMode = "under-soul";
         }
 
         private MyGlobalSettings Settings = new MyGlobalSettings();
@@ -73,12 +74,26 @@ namespace GrassyKnight
         public override void Initialize() {
             base.Initialize();
 
-            // We wait to create these until now because they all create game
+            // We wait to create this until now because they all create game
             // objects. I found that game objects created in field initializers
             // are unreliable (and I assume the same is true for in the
             // constructor).
-            Status = new StatusBar();
             UtilityBehaviour = Behaviour.CreateBehaviour();
+
+            if (Settings.StatusBarMode == "top-middle") {
+                Status = new TopMiddleStatusBar(false);
+                Log("Using TopMiddleStatusBar without shameful grass count");
+            } else if (Settings.StatusBarMode == "top-middle-with-shame") {
+                Status = new TopMiddleStatusBar(true);
+                Log("Using TopMiddleStatusBar with shameful grass count");
+            } else {
+                if (Settings.StatusBarMode != "under-soul") {
+                    LogError($"Unrecognized StatusBarMode ${Settings.StatusBarMode}");
+                }
+
+                Status = new UnderSoulStatusBar();
+                Log("Using UnderSoulStatusBar");
+            }
 
             if (Settings.UseHeuristicGrassKnower) {
                 SetOfAllGrass = new HeuristicGrassKnower();

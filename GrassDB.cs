@@ -107,8 +107,6 @@ namespace GrassyKnight
         }
 
         public bool TrySet(GrassKey k, GrassState newState) {
-            string[] serialized = k.Serialize();
-
             TryAddScene(k.SceneName);
 
             GrassState? oldState = null;

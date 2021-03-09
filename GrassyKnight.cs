@@ -251,6 +251,14 @@ namespace GrassyKnight
             }
         }
 
+        // Sets state of maybeGrass if it is grass
+        private void MaybeSetGrassState(GameObject maybeGrass, GrassState state) {
+            GrassKey k = GrassKey.FromGameObject(maybeGrass);
+            if (GrassStates.Contains(k) || SetOfAllGrass.IsGrass(maybeGrass)) {
+                GrassStates.TrySet(k, state);
+            }
+        }
+
         // Meant to be called when a new scene is entered
         private IEnumerator WaitThenFindGrass() {
             // The docs suggest waiting a frame after scene loads before we
@@ -262,11 +270,7 @@ namespace GrassyKnight
                 foreach (GameObject maybeGrass in
                          UnityEngine.Object.FindObjectsOfType<GameObject>())
                 {
-                    GrassKey k = GrassKey.FromGameObject(maybeGrass);
-                    if (GrassStates.Contains(k) ||
-                            SetOfAllGrass.IsGrass(maybeGrass)) {
-                        GrassStates.TrySet(k, GrassState.Uncut);
-                    }
+                    MaybeSetGrassState(maybeGrass, GrassState.Uncut);
                 }
             } catch (System.Exception e) {
                 LogException("Error in WaitThenFindGrass", e);
@@ -318,11 +322,7 @@ namespace GrassyKnight
                     // examine the argument values of stack frames, but C# does
                     // not give us a good way to do that so here we are.
                     GameObject grass = GrassyBox.GetValue();
-                    GrassKey k = GrassKey.FromGameObject(grass);
-                    if (GrassStates.Contains(k) ||
-                            SetOfAllGrass.IsGrass(grass)) {
-                        GrassStates.TrySet(k, GrassState.Cut);
-                    }
+                    MaybeSetGrassState(grass, GrassState.Cut);
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleShouldCut", e);
@@ -341,12 +341,8 @@ namespace GrassyKnight
 
         private void HandleSlashHit(Collider2D otherCollider, GameObject _) {
             try {
-                GameObject maybeGrass = otherCollider.gameObject;
-                GrassKey k = GrassKey.FromGameObject(maybeGrass);
-                if (GrassStates.Contains(k) ||
-                        SetOfAllGrass.IsGrass(maybeGrass)) {
-                    GrassStates.TrySet(k, GrassState.ShouldBeCut);
-                }
+                MaybeSetGrassState(otherCollider.gameObject,
+                                   GrassState.ShouldBeCut);
             } catch(System.Exception e) {
                 LogException("Error in HandleSlashHit", e);
             }

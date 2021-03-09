@@ -52,5 +52,9 @@ namespace GrassyKnight
         public HashSet<GrassKey> GetAllGrassKeys() {
             return GrassList.AllGrass;
         }
+
+        public (GrassKey, GrassKey)[] GetAliases() {
+            return GrassList.Aliases;
+        }
     }
 }

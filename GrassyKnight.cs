@@ -75,10 +75,9 @@ namespace GrassyKnight
         public override void Initialize() {
             base.Initialize();
 
-            // We wait to create this until now because they all create game
-            // objects. I found that game objects created in field initializers
-            // are unreliable (and I assume the same is true for in the
-            // constructor).
+            // I tried creating this in the field initializer but it failed...
+            // I think construction is too early to make game objects, though I
+            // don't now why.
             UtilityBehaviour = Behaviour.CreateBehaviour();
 
             if (Settings.StatusBarMode == "top-middle") {
@@ -106,14 +105,21 @@ namespace GrassyKnight
                 UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
                     (_, _1) => UtilityBehaviour.StartCoroutine(
                         WaitThenFindGrass());
+
+
             } else {
-                SetOfAllGrass = new CuratedGrassKnower();
+                CuratedGrassKnower curatedKnower = new CuratedGrassKnower();
+                SetOfAllGrass = curatedKnower;
                 Log($"Using CuratedGrassKnower");
 
                 Modding.ModHooks.Instance.SavegameLoadHook +=
                     _ => HandleFileEntered();
                 Modding.ModHooks.Instance.NewGameHook +=
                     () => HandleFileEntered();
+
+                foreach ((GrassKey, GrassKey) alias in curatedKnower.GetAliases()) {
+                    GrassStates.AddAlias(alias.Item1, alias.Item2);
+                }
             }
 
             // Triggered when real grass is being cut for real

@@ -11,6 +11,23 @@ namespace GrassyKnight
     //
     // See note below list for the script that generated this list
     static class GrassList {
+        public static (GrassKey, GrassKey)[] Aliases = new (GrassKey, GrassKey)[] {
+            (
+                // Abyss_18/black_grass3 (4) (4.986658, 17.34)
+                GrassKey.FromSerializedString("QQBiAHkAcwBzAF8AMQA4AA==;YgBsAGEAYwBrAF8AZwByAGEAcwBzADMAIAAoADQAKQA=;QJ+Ssw==;QYq4Ug=="),
+
+                // Abyss_18/black_grass3 (4.986658, 17.34)
+                GrassKey.FromSerializedString("QQBiAHkAcwBzAF8AMQA4AA==;YgBsAGEAYwBrAF8AZwByAGEAcwBzADMA;QJ+Ssw==;QYq4Ug==")
+            ),
+            (
+                // Abyss_18/black_grass4 (1) (2.12, 16.96)
+                GrassKey.FromSerializedString("QQBiAHkAcwBzAF8AMQA4AA==;YgBsAGEAYwBrAF8AZwByAGEAcwBzADQAIAAoADEAKQA=;QAeuFA==;QYeuFA=="),
+
+                // Abyss_18/black_grass4 (2.12, 16.96)
+                GrassKey.FromSerializedString("QQBiAHkAcwBzAF8AMQA4AA==;YgBsAGEAYwBrAF8AZwByAGEAcwBzADQA;QAeuFA==;QYeuFA==")
+            ),
+        };
+
         public static HashSet<GrassKey> AllGrass = new HashSet<GrassKey> {
             GrassKey.FromSerializedString("QQBiAHkAcwBzAF8AMAA0AA==;YgBsAGEAYwBrAF8AZwByAGEAcwBzADEA;Qdi4Ug==;QQj1ww=="),
             GrassKey.FromSerializedString("QQBiAHkAcwBzAF8AMAA0AA==;YgBsAGEAYwBrAF8AZwByAGEAcwBzADEAIAAoADEAKQA=;QoIFHw==;QQUeuA=="),

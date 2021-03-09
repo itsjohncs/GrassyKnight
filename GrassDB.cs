@@ -17,8 +17,13 @@ namespace GrassyKnight
         private GrassStats _globalStats = new GrassStats();
         private Dictionary<string, GrassStats> _sceneStats = new Dictionary<string, GrassStats>();
 
+        // Maps a grass's alias to its canonical key
+        private Dictionary<GrassKey, GrassKey> _aliasToCanonical =
+            new Dictionary<GrassKey, GrassKey>();
+
         public event EventHandler OnStatsChanged;
 
+        // Clears all game state, but does not clear the alias table
         public void Clear() {
             _grassStates = new Dictionary<string, Dictionary<GrassKey, GrassState>>();
             _globalStats = new GrassStats();
@@ -107,24 +112,27 @@ namespace GrassyKnight
         }
 
         public bool TrySet(GrassKey k, GrassState newState) {
-            TryAddScene(k.SceneName);
+            GrassKey canonical = ToCanonical(k);
+
+            TryAddScene(canonical.SceneName);
 
             GrassState? oldState = null;
-            if (_grassStates[k.SceneName].TryGetValue(k, out GrassState state)) {
+            if (_grassStates[canonical.SceneName].TryGetValue(
+                    canonical, out GrassState state)) {
                 oldState = state;
             }
 
             if (oldState == null || (int)oldState < (int)newState) {
-                _grassStates[k.SceneName][k] = newState;
+                _grassStates[canonical.SceneName][canonical] = newState;
 
-                _sceneStats[k.SceneName].HandleUpdate(oldState, newState);
+                _sceneStats[canonical.SceneName].HandleUpdate(oldState, newState);
                 _globalStats.HandleUpdate(oldState, newState);
                 OnStatsChanged?.Invoke(this, EventArgs.Empty);
 
                 GrassyKnight.Instance.LogDebug(
-                    $"Updated state of '{k}' to {newState} (was {oldState})");
+                    $"Updated state of '{canonical}' to {newState} (was {oldState})");
                 GrassyKnight.Instance.LogFine(
-                    $"... Serialized key: {String.Join(";", k.Serialize())}");
+                    $"... Serialized key: {String.Join(";", canonical.Serialize())}");
 
                 return true;
             } else {
@@ -133,20 +141,22 @@ namespace GrassyKnight
         }
 
         public bool Contains(GrassKey k) {
+            GrassKey canonical = ToCanonical(k);
             if (_grassStates.TryGetValue(
-                    k.SceneName,
+                    canonical.SceneName,
                     out Dictionary<GrassKey, GrassState> sceneStates)) {
-                return sceneStates.ContainsKey(k);
+                return sceneStates.ContainsKey(canonical);
             } else {
                 return false;
             }
         }
 
         public GrassState? TryGet(GrassKey k) {
+            GrassKey canonical = ToCanonical(k);
             if (_grassStates.TryGetValue(
-                    k.SceneName,
+                    canonical.SceneName,
                     out Dictionary<GrassKey, GrassState> sceneStates)) {
-                if (sceneStates.TryGetValue(k, out GrassState state)) {
+                if (sceneStates.TryGetValue(canonical, out GrassState state)) {
                     return state;
                 }
             }
@@ -187,6 +197,21 @@ namespace GrassyKnight
 
         public GrassStats GetGlobalStats() {
             return _globalStats;
+        }
+
+        // A change to an alias's state will actually register as a change
+        // to canonical's state. But an alias will not appear in stats or be
+        // considered in GetNearestUncutGrass.
+        public void AddAlias(GrassKey alias, GrassKey canonical) {
+            _aliasToCanonical.Add(alias, canonical);
+        }
+
+        private GrassKey ToCanonical(GrassKey key) {
+            if (_aliasToCanonical.TryGetValue(key, out GrassKey canonical)) {
+                return canonical;
+            } else {
+                return key;
+            }
         }
     }
 }

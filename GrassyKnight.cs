@@ -182,12 +182,9 @@ namespace GrassyKnight
         where OrigFunc : MulticastDelegate
         {
             var context = new GrassyBox(self.gameObject);
-            try
-            {
+            try {
                 orig.DynamicInvoke(new object[] { self, collision });
-            }
-            finally
-            {
+            } finally {
                 context.Dispose();
             }
         }
@@ -268,8 +265,7 @@ namespace GrassyKnight
 
             try {
                 foreach (GameObject maybeGrass in
-                         UnityEngine.Object.FindObjectsOfType<GameObject>())
-                {
+                         UnityEngine.Object.FindObjectsOfType<GameObject>()) {
                     MaybeSetGrassState(maybeGrass, GrassState.Uncut);
                 }
             } catch (System.Exception e) {

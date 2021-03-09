@@ -11,18 +11,18 @@ namespace GrassyKnight
         // Maps from scene name to a dictionary mapping from grass key to
         // state. The seperation of grass by scene is done only for query
         // speed, since GrassKey has the scene name in it already.
-        private Dictionary<string, Dictionary<GrassKey, GrassState>> GrassStates =
+        private Dictionary<string, Dictionary<GrassKey, GrassState>> _grassStates =
             new Dictionary<string, Dictionary<GrassKey, GrassState>>();
 
-        private GrassStats GlobalStats = new GrassStats();
-        private Dictionary<string, GrassStats> SceneStats = new Dictionary<string, GrassStats>();
+        private GrassStats _globalStats = new GrassStats();
+        private Dictionary<string, GrassStats> _sceneStats = new Dictionary<string, GrassStats>();
 
         public event EventHandler OnStatsChanged;
 
         public void Clear() {
-            GrassStates = new Dictionary<string, Dictionary<GrassKey, GrassState>>();
-            GlobalStats = new GrassStats();
-            SceneStats = new Dictionary<string, GrassStats>();
+            _grassStates = new Dictionary<string, Dictionary<GrassKey, GrassState>>();
+            _globalStats = new GrassStats();
+            _sceneStats = new Dictionary<string, GrassStats>();
 
             OnStatsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -47,7 +47,7 @@ namespace GrassyKnight
 
             parts.Add(_serializationVersion);
 
-            foreach (Dictionary<GrassKey, GrassState> states in GrassStates.Values) {
+            foreach (Dictionary<GrassKey, GrassState> states in _grassStates.Values) {
                 foreach (KeyValuePair<GrassKey, GrassState> kv in states) {
                     parts.AddRange(kv.Key.Serialize());
                     parts.Add(((int)kv.Value).ToString());
@@ -96,13 +96,13 @@ namespace GrassyKnight
             // Try add isn't available in the stdlib we're building against :(
             // (I think... honestly I'm not convinced I'm not missing an
             // reference but I sure can't find where it is).
-            if (!GrassStates.ContainsKey(sceneName)) {
-                GrassStates.Add(sceneName,
+            if (!_grassStates.ContainsKey(sceneName)) {
+                _grassStates.Add(sceneName,
                                 new Dictionary<GrassKey, GrassState>());
             }
 
-            if (!SceneStats.ContainsKey(sceneName)) {
-                SceneStats.Add(sceneName, new GrassStats());
+            if (!_sceneStats.ContainsKey(sceneName)) {
+                _sceneStats.Add(sceneName, new GrassStats());
             }
         }
 
@@ -112,15 +112,15 @@ namespace GrassyKnight
             TryAddScene(k.SceneName);
 
             GrassState? oldState = null;
-            if (GrassStates[k.SceneName].TryGetValue(k, out GrassState state)) {
+            if (_grassStates[k.SceneName].TryGetValue(k, out GrassState state)) {
                 oldState = state;
             }
 
             if (oldState == null || (int)oldState < (int)newState) {
-                GrassStates[k.SceneName][k] = newState;
+                _grassStates[k.SceneName][k] = newState;
 
-                SceneStats[k.SceneName].HandleUpdate(oldState, newState);
-                GlobalStats.HandleUpdate(oldState, newState);
+                _sceneStats[k.SceneName].HandleUpdate(oldState, newState);
+                _globalStats.HandleUpdate(oldState, newState);
                 OnStatsChanged?.Invoke(this, EventArgs.Empty);
 
                 GrassyKnight.Instance.LogDebug(
@@ -135,7 +135,7 @@ namespace GrassyKnight
         }
 
         public bool Contains(GrassKey k) {
-            if (GrassStates.TryGetValue(
+            if (_grassStates.TryGetValue(
                     k.SceneName,
                     out Dictionary<GrassKey, GrassState> sceneStates)) {
                 return sceneStates.ContainsKey(k);
@@ -145,7 +145,7 @@ namespace GrassyKnight
         }
 
         public GrassState? TryGet(GrassKey k) {
-            if (GrassStates.TryGetValue(
+            if (_grassStates.TryGetValue(
                     k.SceneName,
                     out Dictionary<GrassKey, GrassState> sceneStates)) {
                 if (sceneStates.TryGetValue(k, out GrassState state)) {
@@ -158,7 +158,7 @@ namespace GrassyKnight
 
         public GrassKey? GetNearestUncutGrass(Vector2 origin, string sceneName) {
             Dictionary<GrassKey, GrassState> grassStatesForScene;
-            if (!GrassStates.TryGetValue(sceneName, out grassStatesForScene)) {
+            if (!_grassStates.TryGetValue(sceneName, out grassStatesForScene)) {
                 return null;
             }
 
@@ -180,7 +180,7 @@ namespace GrassyKnight
         }
 
         public GrassStats GetStatsForScene(string sceneName) {
-            if (SceneStats.TryGetValue(sceneName, out GrassStats stats)) {
+            if (_sceneStats.TryGetValue(sceneName, out GrassStats stats)) {
                 return stats;
             } else {
                 return new GrassStats();
@@ -188,7 +188,7 @@ namespace GrassyKnight
         }
 
         public GrassStats GetGlobalStats() {
-            return GlobalStats;
+            return _globalStats;
         }
     }
 }

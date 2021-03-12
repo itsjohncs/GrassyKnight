@@ -247,7 +247,7 @@ namespace GrassyKnight
                     AutoMower autoMower = hero.AddComponent<AutoMower>();
                     autoMower.SetOfAllGrass = SetOfAllGrass;
                     autoMower.GrassStates = GrassStates;
-                    Log("Attached autoMower to hero");
+                    LogDebug("Attached autoMower to hero");
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckAutoMower", e);

@@ -228,19 +228,11 @@ namespace GrassyKnight
             try {
                 GameObject geoCounter =
                     GameManager.instance?.hero_ctrl?.geoCounter?.gameObject;
-                GrassCount grassCount = geoCounter?.GetComponent<GrassCount>();
-                if (geoCounter != null && grassCount == null) {
+                if (geoCounter != null &&
+                        geoCounter.GetComponent<GrassCount>() == null) {
                     geoCounter.AddComponent<GrassCount>();
                     LogDebug("Attached Grass Count to Geo Counter");
                     UpdateGrassCount();
-                } else if (grassCount != null) {
-                    if (GameManager.instance?.sceneName == "Tutorial_01") {
-                        GrassStats globalStats = GrassStates.GetGlobalStats();
-                        grassCount.ForceVisible =
-                            globalStats[GrassState.Uncut] < globalStats.Total();
-                    } else {
-                        grassCount.ForceVisible = false;
-                    }
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckAutoMower", e);

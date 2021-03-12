@@ -74,11 +74,6 @@ namespace GrassyKnight
         // computed width will be.
         private List<RowLayoutObject> _layout = new List<RowLayoutObject>();
 
-        // If true, the grass count will be visible even if the Geo Counter
-        // isn't. This is only used in King's Pass if the user collects grass
-        // before collecting Geo.
-        public bool ForceVisible = false;
-
         // The normal size of the geo count is rather large, such that adding
         // a bunch of grass stats next to it is overwhelmingly large. So we
         // scale it down by this factor.
@@ -262,12 +257,8 @@ namespace GrassyKnight
             // The text object is faded in by changing its material color. So
             // we'll just always match it to have the same fade-in apply to us
             // too.
-            Color color;
-            if (ForceVisible) {
-                color = new Color(1, 1, 1, 1);
-            } else {
-                color = _layout[0].GameObject_.GetComponent<MeshRenderer>().material.color;
-            }
+            Color anchorColor =
+                _layout[0].GameObject_.GetComponent<MeshRenderer>().material.color;
 
             float currentX = anchorLeft + _layout[0].GetComputedWidth();
             for (int i = 1; i < _layout.Count; ++i) {
@@ -281,9 +272,9 @@ namespace GrassyKnight
                 _layout[i].GameObject_.GetComponent<Renderer>().enabled = true;
 
                 if (renderer is SpriteRenderer spriteRenderer) {
-                    spriteRenderer.color = color;
+                    spriteRenderer.color = anchorColor;
                 } else if (renderer is MeshRenderer meshRenderer) {
-                    meshRenderer.material.color = color;
+                    meshRenderer.material.color = anchorColor;
                 }
             }
         }

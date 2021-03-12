@@ -95,8 +95,8 @@ namespace GrassyKnight
 
         private void _Start() {
             _layout.Add(new RowLayoutObject {
-                MinWidth = 0,
-                WidthStepSize = 0,
+                MinWidth = 1.4f, // A bit wider than 3 digits
+                WidthStepSize = 0.5f, // Roughly 1 digit
                 PaddingRight = 0.7f,
                 GameObject_ = GetGeoTextObject(),
             });
@@ -109,8 +109,8 @@ namespace GrassyKnight
             });
             _roomCount = CreateTextObject("Room Grass Count");
             _layout.Add(new RowLayoutObject {
-                MinWidth = 0,
-                WidthStepSize = 0,
+                MinWidth = 1.4f,
+                WidthStepSize = 0.5f,
                 PaddingRight = 0.7f,
                 GameObject_ = _roomCount,
             });

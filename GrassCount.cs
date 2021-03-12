@@ -71,7 +71,7 @@ namespace GrassyKnight
         }
 
         // The first object is the "anchor", it will not be moved but its
-        // computed width will be.
+        // computed width will be used.
         private List<RowLayoutObject> _layout = new List<RowLayoutObject>();
 
         // The normal size of the geo count is rather large, such that adding
@@ -81,8 +81,6 @@ namespace GrassyKnight
 
         private GameObject _roomCount = null;
         private GameObject _globalCount = null;
-
-        private int counter = 0;
 
         public void Start() {
             try {

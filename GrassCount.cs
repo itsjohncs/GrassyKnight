@@ -119,7 +119,7 @@ namespace GrassyKnight
                 WidthStepSize = 0,
                 PaddingRight = 0.3f,
                 GameObject_ = CreateSpriteObject(
-                    "Grass Sprite", "grass-icon.png"),
+                    "Grass Sprite", "global-grass-icon.png"),
             });
             _globalCount = CreateTextObject("Global Grass Count");
             _layout.Add(new RowLayoutObject {

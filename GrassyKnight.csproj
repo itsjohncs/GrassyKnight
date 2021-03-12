@@ -107,6 +107,9 @@
     <EmbeddedResource Include="img/grass-icon.png">
       <LogicalName>grass-icon.png</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="img/global-grass-icon.png">
+      <LogicalName>global-grass-icon.png</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

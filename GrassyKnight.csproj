@@ -96,7 +96,6 @@
     <Compile Include="GrassList.cs" />
     <Compile Include="GrassStats.cs" />
     <Compile Include="GrassKnower.cs" />
-    <Compile Include="StatusBar.cs" />
     <Compile Include="Behaviour.cs" />
     <Compile Include="GrassyCompass.cs" />
     <Compile Include="GrassyBox.cs" />

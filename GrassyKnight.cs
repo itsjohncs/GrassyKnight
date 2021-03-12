@@ -34,7 +34,6 @@ namespace GrassyKnight
             public bool UseHeuristicGrassKnower = false;
             public bool AutomaticallyCutGrass = false;
             public string ToggleCompassHotkey = "Space";
-            public string StatusBarMode = "under-soul";
             public bool DisableCompass = false;
         }
 
@@ -56,9 +55,6 @@ namespace GrassyKnight
         // depends on configuration
         GrassKnower SetOfAllGrass = null;
 
-        // The status bar that shows the player the number of grass cut
-        StatusBar Status = null;
-
         // Usually Unity code is contained in MonoBehaviour classes, so Unity
         // has lots of very useful functionality in them (ex: access to the
         // coroutine scheduler). This is forever-living MonoBehaviour object we
@@ -79,21 +75,6 @@ namespace GrassyKnight
             // I think construction is too early to make game objects, though I
             // don't now why.
             UtilityBehaviour = Behaviour.CreateBehaviour();
-
-            if (Settings.StatusBarMode == "top-middle") {
-                Status = new TopMiddleStatusBar(false);
-                Log("Using TopMiddleStatusBar without shameful grass count");
-            } else if (Settings.StatusBarMode == "top-middle-with-shame") {
-                Status = new TopMiddleStatusBar(true);
-                Log("Using TopMiddleStatusBar with shameful grass count");
-            } else {
-                if (Settings.StatusBarMode != "under-soul") {
-                    LogError($"Unrecognized StatusBarMode ${Settings.StatusBarMode}");
-                }
-
-                Status = new UnderSoulStatusBar();
-                Log("Using UnderSoulStatusBar");
-            }
 
             if (Settings.UseHeuristicGrassKnower) {
                 SetOfAllGrass = new HeuristicGrassKnower();
@@ -136,15 +117,12 @@ namespace GrassyKnight
             // swung at. This is the detector of shameful grass.
             Modding.ModHooks.Instance.SlashHitHook += HandleSlashHit;
 
-            // Update the stats in the status bar whenever we change scenes or
-            // if they change.
-            GrassStates.OnStatsChanged += (_, _1) => UpdateStatus();
+            // Update the grass count whenever we change scenes or if they
+            // change.
+            GrassStates.OnStatsChanged += (_, _1) => UpdateGrassCount();
             UnityEngine.SceneManagement.SceneManager.sceneLoaded +=
                 (_, _1) => UtilityBehaviour.StartCoroutine(
-                    WaitThenUpdateStatus());
-
-            // Hides/shows the status bar depending on UI state
-            UtilityBehaviour.OnUpdate += HandleCheckStatusBarVisibility;
+                    WaitThenUpdateGrassCount());
 
             // Makes sure our grassy counter is always in-place
             UtilityBehaviour.OnUpdate += HandleAttachGrassCount;
@@ -195,17 +173,6 @@ namespace GrassyKnight
                 orig.DynamicInvoke(new object[] { self, collision });
             } finally {
                 context.Dispose();
-            }
-        }
-
-        private void HandleCheckStatusBarVisibility(object _, EventArgs _1) {
-            try {
-                GlobalEnums.UIState? state = UIManager.instance?.uiState;
-                Status.Visible =
-                    state == GlobalEnums.UIState.PLAYING ||
-                    state == GlobalEnums.UIState.PAUSED;
-            } catch (System.Exception e) {
-                LogException("Error in HandleCheckStatusBarVisibility", e);
             }
         }
 
@@ -265,7 +232,7 @@ namespace GrassyKnight
                         geoCounter.GetComponent<GrassCount>() == null) {
                     geoCounter.AddComponent<GrassCount>();
                     LogDebug("Attached Grass Count to Geo Counter");
-                    UpdateStatus();
+                    UpdateGrassCount();
                 }
             } catch (System.Exception e) {
                 LogException("Error in HandleCheckAutoMower", e);
@@ -298,27 +265,29 @@ namespace GrassyKnight
         }
 
         // Meant to be called when a new scene is entered
-        private IEnumerator WaitThenUpdateStatus() {
+        private IEnumerator WaitThenUpdateGrassCount() {
             // The docs suggest wait a moment to make sure everything's set
             yield return new WaitForSeconds(0.1f);
 
-            UpdateStatus();
+            UpdateGrassCount();
         }
 
-        private void UpdateStatus() {
+        private void UpdateGrassCount() {
             try {
                 string sceneName = GameManager.instance?.sceneName;
                 if (sceneName != null) {
-                    Status.Update(
+                    GrassCount grassCount =
+                        GameManager.instance
+                            ?.hero_ctrl
+                            ?.geoCounter
+                            ?.gameObject
+                            ?.GetComponent<GrassCount>();
+                    grassCount?.UpdateStats(
                         GrassStates.GetStatsForScene(sceneName),
                         GrassStates.GetGlobalStats());
-                    GameManager.instance?.hero_ctrl?.geoCounter?.gameObject?.GetComponent<GrassCount>()?.UpdateStats(
-                        GrassStates.GetStatsForScene(sceneName),
-                        GrassStates.GetGlobalStats());
-                    Status.Visible = true;
                 }
             } catch (System.Exception e) {
-                LogException("Error in UpdateStatus", e);
+                LogException("Error in UpdateGrassCount", e);
             }
         }
 

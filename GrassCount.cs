@@ -252,28 +252,13 @@ namespace GrassyKnight
             float anchorLeft = anchorParentTransform.InverseTransformPoint(
                 _layout[0].GameObject_.GetComponent<Renderer>().bounds.min).x;
 
-            // The text object is faded in by changing its material color. So
-            // we'll just always match it to have the same fade-in apply to us
-            // too.
-            Color anchorColor =
-                _layout[0].GameObject_.GetComponent<MeshRenderer>().material.color;
-
             float currentX = anchorLeft + _layout[0].GetComputedWidth();
             for (int i = 1; i < _layout.Count; ++i) {
                 Transform transform = _layout[i].GameObject_.transform;
                 transform.localPosition = WithX(transform.localPosition,
                                                 currentX);
                 currentX += _layout[i].GetComputedWidth();
-
-                Renderer renderer = _layout[i].GameObject_.GetComponent<Renderer>();
-
                 _layout[i].GameObject_.GetComponent<Renderer>().enabled = true;
-
-                if (renderer is SpriteRenderer spriteRenderer) {
-                    spriteRenderer.color = anchorColor;
-                } else if (renderer is MeshRenderer meshRenderer) {
-                    meshRenderer.material.color = anchorColor;
-                }
             }
         }
 

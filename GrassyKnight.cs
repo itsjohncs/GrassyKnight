@@ -62,7 +62,7 @@ namespace GrassyKnight
         // status.
         Behaviour UtilityBehaviour = null;
 
-        public override string GetVersion() => "1.2.0";
+        public override string GetVersion() => "1.3.0";
 
         public GrassyKnight() : base("Grassy Knight") {
             GrassyKnight.Instance = this;

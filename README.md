@@ -1,8 +1,10 @@
 # Grassy Knight
 
-This mod will add a count of all the unique grass you've cut in Hollow Knight.
+This is a Hollow Knight mod that tracks the grass you've cut. In-game, next to your Geo count, it will show you your progress towards cutting all the grass within your current room, as well as your progress towards cutting all the grass in Hollow Nest.
 
 ![](screenshot.png)
+
+Note that the grass will regrow but you only get credit for the first time you cut it.
 
 ## Enabling the Compass
 

@@ -34,7 +34,7 @@ namespace GrassyKnight
             public bool UseHeuristicGrassKnower = false;
             public bool AutomaticallyCutGrass = false;
             public string ToggleCompassHotkey = "Space";
-            public bool DisableCompass = false;
+            public bool DisableCompass = true;
         }
 
         private MyGlobalSettings Settings = new MyGlobalSettings();

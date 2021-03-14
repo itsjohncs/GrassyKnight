@@ -16,7 +16,7 @@ namespace GrassyKnight
         public KeyCode? ToggleHotkey = null;
 
         // Whether the compass is toggled on or off
-        public bool ToggledOn { get; private set; } = false;
+        public bool ToggledOn { get; private set; } = true;
 
         // Will be used to automatically update Target every frame if non-null
         public GrassDB AllGrass = null;

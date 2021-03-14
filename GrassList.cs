@@ -3,13 +3,21 @@ using System.Collections.Generic;
 
 namespace GrassyKnight
 {
-    // A curated list of all the cuttable grass in the game! Used the data
-    // aggregated at grass.johncs.com as well as a run I made with noclip and
-    // the automower. I'm reasonably confident that all grass in this list is
-    // cuttable, but it's very likely that some cuttable grass didn't make it
-    // because I saw some grass get logged as shameful despite being cuttable.
+    // A curated list of all the cuttable grass in the game! History of this
+    // list so far:
     //
-    // See note below list for the script that generated this list
+    //  1. A few players (Bismuth, Wren, and John) cleared the game of grass
+    //     normally. We found all but 2 grass was reachable by the player.
+    //     Automatic detection of uncuttable vs cuttable grass was buggy at
+    //     this point, so the resulting list was imperfect.
+    //  2. Infallible uncuttable vs cuttable grass detection was implemented,
+    //     so John went through the game with noclip and the auto-mower on. The
+    //     resulting list was very good.
+    //  3. Skurry did their Grass % stream and revealed some strangely behaved
+    //     grass in the Ancient Basin. Took some time but John figured out
+    //     that the grass was switched out if you had/didn't-have wings.
+    //     Aliases were added for the swapped grass a missing piece of grass
+    //     was added (only cuttable if you don't have wings yet).
     static class GrassList {
         public static (GrassKey, GrassKey)[] Aliases = new (GrassKey, GrassKey)[] {
             (

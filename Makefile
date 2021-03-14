@@ -28,4 +28,4 @@ zip-build/LICENSE: LICENSE
 	cp $< $@
 
 clean:
-	rm -r zip-build/ bin/ obj/
+	rm -r zip-build/ bin/ obj/ GrassyKnight.zip

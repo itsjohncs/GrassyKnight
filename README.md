@@ -46,4 +46,4 @@ And here's what you would change it to in order to enable the compass:
 
 With the compass enabled, you can hide/show it in-game by pressing the space bar.
 
-If you'd like to change which hotkey hides/shows the compass, change the `ToggleCompassHotkey` option to something else. Check out [ALL_KEYBOARD_KEY_NAMES.txt](https://github.com/itsjohncs/GrassyKnight/blob/main/ALL_KEYBOARD_KEY_NAMES.txt) for a list of all the possible values.
+If you'd like to change which hotkey hides/shows the compass, change the `ToggleCompassHotkey` option to something else. Check out [ALL_KEYBOARD_KEY_NAMES.txt](https://raw.githubusercontent.com/itsjohncs/GrassyKnight/main/ALL_KEYBOARD_KEY_NAMES.txt) for a list of all the possible values.

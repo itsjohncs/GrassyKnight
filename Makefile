@@ -12,20 +12,20 @@ zip-build:
 zip-build/GrassyKnight.dll: bin/Debug/GrassyKnight.dll
 	cp $< $@
 
-zip-build/README.md: zip-build README.md
+zip-build/README.md: README.md zip-build
 	./add_link_to_readme.py README.md > $@
 
-zip-build/VERSION: GrassyKnight.cs
+zip-build/VERSION: GrassyKnight.cs zip-build
 	grep 'public override string GetVersion() => "' GrassyKnight.cs | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' > $@
 
-zip-build/ALL_KEYBOARD_KEY_NAMES.txt: ALL_KEYBOARD_KEY_NAMES.txt
+zip-build/ALL_KEYBOARD_KEY_NAMES.txt: ALL_KEYBOARD_KEY_NAMES.txt zip-build
 	cp $< $@
 
-zip-build/screenshot.png: screenshot.png
+zip-build/screenshot.png: screenshot.png zip-build
 	cp $< $@
 
-zip-build/LICENSE: LICENSE
+zip-build/LICENSE: LICENSE zip-build
 	cp $< $@
 
 clean:
-	rm -r zip-build/ bin/ obj/ GrassyKnight.zip
+	rm -rf zip-build/ bin/ obj/ GrassyKnight.zip

@@ -1,6 +1,19 @@
+using HutongGames.PlayMaker.Actions;
+using InControl;
+using Modding;
+using Modding.Menu;
+using Modding.Menu.Config;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
+using UObject = UnityEngine.Object;
 
 
 namespace GrassyKnight
@@ -20,9 +33,9 @@ namespace GrassyKnight
             return new GrassKey(
                 gameObject.scene.name,
                 gameObject.name,
-                // gameObject.position.z is being discarded here. The explicit
-                // cast is added for clarity but is unnecessary.
-                (Vector2)gameObject.transform.position);
+				// gameObject.position.z is being discarded here. The explicit
+				// cast is added for clarity but is unnecessary.
+				gameObject.transform.position);
         }
 
         private (string, string, Vector2) ToTuple() {

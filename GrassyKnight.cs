@@ -1,21 +1,39 @@
-﻿using System;
+﻿using Modding;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace GrassyKnight
 {
-    public class GrassyKnight : Modding.Mod {
-        // In a previous version we accessed ModSettings.BoolValues directly,
-        // but it looks like the latest code in the Modding.API repo no longer
-        // has BoolValues as a member at all. This way of using ModSettings is
-        // more in line with other mod authors do so we should be somewhat
-        // future-proof now.
-        private class MySaveData : Modding.ModSettings {
-            public string serializedGrassDB;
-        }
+	public class MyGlobalSettings
+	{
+		public bool UseHeuristicGrassKnower = false;
+		public bool AutomaticallyCutGrass = false;
+		public string ToggleCompassHotkey = "Space";
+		public bool DisableCompass = true;
+	}
 
-        public override Modding.ModSettings SaveSettings
+	public class MySaveData
+	{
+		public string serializedGrassDB;
+	}
+
+	public class GrassyKnight : Modding.Mod, IGlobalSettings<MyGlobalSettings>, ILocalSettings<MySaveData>{
+		// In a previous version we accessed ModSettings.BoolValues directly,
+		// but it looks like the latest code in the Modding.API repo no longer
+		// has BoolValues as a member at all. This way of using ModSettings is
+		// more in line with other mod authors do so we should be somewhat
+		// future-proof now.
+		public static MyGlobalSettings Settings { get; protected set; } = new MyGlobalSettings();
+
+		public void OnLoadGlobal(MyGlobalSettings s) => Settings = s;
+		// This method gets called when the mod loader needs to save the global settings.
+		public MyGlobalSettings OnSaveGlobal() => Settings;
+
+		
+
+        public MySaveData SaveSettings
         {
             get {
                 return new MySaveData {
@@ -26,26 +44,17 @@ namespace GrassyKnight
             set {
                 GrassStates.Clear();
                 GrassStates.AddSerializedData(
-                    ((MySaveData)value).serializedGrassDB);
+					value.serializedGrassDB);
             }
         }
 
-        private class MyGlobalSettings : Modding.ModSettings {
-            public bool UseHeuristicGrassKnower = false;
-            public bool AutomaticallyCutGrass = false;
-            public string ToggleCompassHotkey = "Space";
-            public bool DisableCompass = true;
-        }
+		public void OnLoadLocal(MySaveData s) => SaveSettings = s;
 
-        private MyGlobalSettings Settings = new MyGlobalSettings();
-        public override Modding.ModSettings GlobalSettings {
-            get => Settings;
-            set => Settings = (MyGlobalSettings)value;
-        }
+		public MySaveData OnSaveLocal() => SaveSettings;
 
-        // Will be set to the exactly one ModMain in existance... Trusting
-        // Modding.Mod to ensure that ModMain is only ever instantiated once...
-        public static GrassyKnight Instance = null;
+		// Will be set to the exactly one ModMain in existance... Trusting
+		// Modding.Mod to ensure that ModMain is only ever instantiated once...
+		public static GrassyKnight Instance = null;
 
         // Stores which grass is cut and allows queries (like "where's the
         // nearest uncut grass?")
@@ -65,7 +74,7 @@ namespace GrassyKnight
         public override string GetVersion() => "1.3.0";
 
         public GrassyKnight() : base("Grassy Knight") {
-            GrassyKnight.Instance = this;
+			Instance = this;
         }
 
         public override void Initialize() {
@@ -93,9 +102,9 @@ namespace GrassyKnight
                 SetOfAllGrass = curatedKnower;
                 Log($"Using CuratedGrassKnower");
 
-                Modding.ModHooks.Instance.SavegameLoadHook +=
+                Modding.ModHooks.SavegameLoadHook +=
                     _ => HandleFileEntered();
-                Modding.ModHooks.Instance.NewGameHook +=
+                Modding.ModHooks.NewGameHook +=
                     () => HandleFileEntered();
 
                 foreach ((GrassKey, GrassKey) alias in curatedKnower.GetAliases()) {
@@ -115,7 +124,7 @@ namespace GrassyKnight
 
             // Backup we use to make sure we notice uncuttable grass getting
             // swung at. This is the detector of shameful grass.
-            Modding.ModHooks.Instance.SlashHitHook += HandleSlashHit;
+            Modding.ModHooks.SlashHitHook += HandleSlashHit;
 
             // Update the grass count whenever we change scenes or if they
             // change.
@@ -132,7 +141,7 @@ namespace GrassyKnight
             // be more efficient, but it's a cheap operation so imma not worry
             // about it.
             if (!Settings.DisableCompass) {
-                Modding.ModHooks.Instance.HeroUpdateHook +=
+                Modding.ModHooks.HeroUpdateHook +=
                     HandleCheckGrassyCompass;
             }
 
@@ -140,7 +149,7 @@ namespace GrassyKnight
             // This'll make sure the hero has their lawnmower handy at all
             // times.
             if (Settings.AutomaticallyCutGrass) {
-                Modding.ModHooks.Instance.HeroUpdateHook +=
+                Modding.ModHooks.HeroUpdateHook +=
                     HandleCheckAutoMower;
             }
         }
